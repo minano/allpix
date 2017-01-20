@@ -22,6 +22,8 @@
 #include "AllPixEdepHistogrammerDigitizer.hh"
 // Included by newdigitizer.sh script --> CMSp1
 #include "AllPixCMSp1Digitizer.hh"
+// Included by newdigitizer.sh script --> ITkStrips
+#include "AllPixITkStripsDigitizer.hh"
 // __endofheader__
 
 // geometry
@@ -165,6 +167,13 @@ else if (digitizerName == "CMSp1") {
 			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
 		}
 
+// Included by newdigitizer.sh script --> ITkStrips
+else if (digitizerName == "ITkStrips") {
+			AllPixITkStripsDigitizer * dp = new AllPixITkStripsDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
+			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
+			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
+		}
+ 
         // __endofdigitlist__
    	    else {
 			G4cout << "    can't find digitizer with name : " << digitizerName << G4endl;

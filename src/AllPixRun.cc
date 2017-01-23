@@ -3,6 +3,7 @@
  */
 
 #include "AllPixRun.hh"
+#include "AllPixDebug.h"
 
 #include "G4Event.hh"
 #include "G4HCofThisEvent.hh"
@@ -25,6 +26,7 @@
 #include <map>
 #include <time.h>
 
+extern DebugLevel debug;
 
 /**
  * This constructor is called once per run
@@ -366,7 +368,7 @@ void AllPixRun::FillTelescopeFiles(const G4Run* aRun, G4String folderName, G4boo
   // open Timepix Telescope output file for this run
   TString filename = TString::Format("%s/mpx-%s-0_%i.txt",folderName.data(),filedate,runID);
   
-  G4cout << "Path to file: " << filename << G4endl;
+  if (debug>=INFO) G4cout << "Path to file: " << filename << G4endl;
   ofstream tpixtelescope_f(filename);
 
   // loop on data from this run, map filled by RecordTelescopeDigits

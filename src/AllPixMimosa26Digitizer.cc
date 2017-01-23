@@ -3,6 +3,8 @@
  */
 
 #include "AllPixMimosa26Digitizer.hh"
+
+#include "AllPixDebug.h"
 #include "AllPixTrackerHit.hh"
 #include "G4DigiManager.hh"
 #include "G4VDigitizerModule.hh"
@@ -14,6 +16,8 @@
 
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Random/RandGaussQ.h" // faster than RandGauss, less accurate
+
+extern DebugLevel debug;
 
 AllPixMimosa26Digitizer::AllPixMimosa26Digitizer(G4String modName, G4String hitsColName, G4String digitColName) 
 : AllPixDigitizerInterface (modName) {
@@ -513,7 +517,7 @@ void AllPixMimosa26Digitizer::Digitize(){
 
 	G4int dc_entries = m_digitsCollection->entries();
 	if(dc_entries > 0){
-		G4cout << "--------> Digits Collection : " << collectionName[0]
+		if (debug>=INFO) G4cout << "--------> Digits Collection : " << collectionName[0]
 		                                                             << "(" << m_hitsColName[0] << ")"
 		                                                             << " contains " << dc_entries
 		                                                             << " digits" << G4endl;

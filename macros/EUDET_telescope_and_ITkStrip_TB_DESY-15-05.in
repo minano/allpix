@@ -149,11 +149,11 @@
 ####################################################################
 # Draw trajectories at end of event, showing trajectory points as
 # markers of size 2 pixels
-/vis/scene/add/trajectories
-/vis/modeling/trajectories/create/drawByCharge
-/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts false
-/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
-/vis/scene/endOfEventAction accumulate
+#/vis/scene/add/trajectories
+#/vis/modeling/trajectories/create/drawByCharge
+#/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts false
+#/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+#/vis/scene/endOfEventAction accumulate
 
 # Write ROOT File
 /allpix/WriteROOTFiles/write 1
@@ -198,7 +198,7 @@
 ####################################################################
 # Shoot
 #/allpix/beam/frames 100
-/allpix/beam/frames 50000
+/allpix/beam/frames 20000
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
 /allpix/beam/type const 1

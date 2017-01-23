@@ -1,7 +1,7 @@
 // ********************************************************************
 //                                                     AllPix Geant4  *
 //                 Generic Geant4 implementation for pixel detectors  *
-//    Laboratoire de l'Accélérateur Linéaire Université Paris-Sud 11  *
+//    Laboratoire de l'Accï¿½lï¿½rateur Linï¿½aire Universitï¿½ Paris-Sud 11  *
 //                                                                    *
 //                           John Idarraga <idarraga@lal.in2p3.fr>    *
 //                            Mathieu Benoit <benoit@lal.in2p3.fr>    *
@@ -35,6 +35,8 @@
 // GEANT4 tag $Name: geant4-08-01 $
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#include "AllPixDebug.h"
 
 #include <time.h>
 #include <string>
@@ -97,8 +99,15 @@ typedef enum {
 	_RUN_BATCH // run batch mode in this case
 } inputPars;
 
+DebugLevel debug;
+
 void checkflags(int,char**);
 void SplashWindow();
+
+// Check the options given on the command line and retrieve the values
+bool cmdOptionExists(char** begin, char** end, const std::string& option);
+char* getCmdOption(char** begin, char** end, const std::string & option);
+
 
 #include "TMatrix.h"
 #include "TRotMatrix.h"
@@ -112,6 +121,24 @@ int main(int argc, char** argv)
 	// Flags
 	checkflags(argc, argv);
 	G4String fileName = argv[_MACRO];
+
+	// Choose debug level, default error (0)
+	debug = ERROR;
+	if (cmdOptionExists(argv, argv + argc, "--debug")) {
+		switch (std::stoi(getCmdOption(argv, argv+argc, "--debug")))
+		{
+					case 0:
+						debug = ERROR;
+						break;
+					case 10:
+						debug = DEBUG;
+						break;
+					default:
+						debug = INFO;
+		}
+
+	}
+	G4cout << " DEBUG level " << debug << endl;
 
 	// Seed the random number generator manually
 	time_t rawtime;
@@ -190,7 +217,8 @@ int main(int argc, char** argv)
 
 	G4String command = "/control/execute ";
 
-	if (argc-1 == _RUN_BATCH)   // batch mode
+	//if (argc-1 == _RUN_BATCH)   // batch mode
+	if (cmdOptionExists(argv, argv+argc, "--batch"))   // batch mode
 	{
 		//G4String command = "/control/execute ";
 		//G4String fileName = argv[_MACRO];
@@ -273,7 +301,12 @@ void checkflags(int argc, char** argv){
 
 	if(argc < 2){
 		G4cout << "use: " << G4endl;
-		G4cout << "     " << argv[0] << " macro[filename]" << G4endl;
+		//G4cout << "     " << argv[0] << " macro[filename]" << G4endl;
+		G4cout << "     " << argv[0] << " macro/<filename> [options]" << G4endl;
+		G4cout << "     additional options: --debug <level> where level is 0 (ERROR), 10 (DEBUG), or smth between (INFO)" << G4endl;
+		G4cout << "                         --batch Runs simulation without graphical " << G4endl <<
+				"                           window/driver." << G4endl;
+		//G4cout << "                         --nEvents <n> Number of events to create." << G4endl; // not yet implemented
 		exit(1);
 	}
 
@@ -290,6 +323,23 @@ void SplashWindow(){
 	G4cout << "*************************************************************" << G4endl;
 	G4cout << G4endl;
 
+}
+
+bool
+cmdOptionExists(char** begin, char** end, const std::string& option)
+{
+  return std::find(begin, end, option) != end;
+}
+
+char*
+getCmdOption(char** begin, char** end, const std::string & option)
+{
+  char** itr = std::find(begin, end, option);
+  if (itr != end && ++itr != end)
+    {
+      return *itr;
+    }
+  return 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

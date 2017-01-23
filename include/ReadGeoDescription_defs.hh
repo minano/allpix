@@ -72,5 +72,9 @@
 #define __Cross_Talk_S "Cross_Talk"
 #define __Saturation_Energy_S "Saturation_Energy"
 
-
+// Strips specific
+#define __bias_voltage_S "bias_voltage"
+#define __depletion_voltage_S "depletion_voltage"
+#define __threshold_S "threshold"
+#define __sensor_temperature_S "sensor_temperature"
 

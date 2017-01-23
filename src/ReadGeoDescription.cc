@@ -39,6 +39,11 @@ ReadGeoDescription::ReadGeoDescription(string xmlFile){
 	m_unitsMap["cm"] = CLHEP::cm;
 	m_unitsMap["m"] = CLHEP::m;
 
+	// Strips
+	m_unitsMap["fC"] = CLHEP::coulomb*1e-15;
+	m_unitsMap["V"] = 1.0;
+	m_unitsMap["C"] = 1.0;
+
 	// list of expected tags
 	TDOMParser *domParser = new TDOMParser();
 	m_firstIndx = -1;
@@ -321,17 +326,17 @@ void ReadGeoDescription::ParseContext(TXMLNode *node)
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetSensorHZ(val*m_unitsMap[m_currentAtt]);
 
-                }else if(m_currentNodeName == __coverlayer_hz_S){
+				}else if(m_currentNodeName == __coverlayer_hz_S){
 
-                    float val = atof(tempContent.c_str());
-                    m_detsGeo[m_firstIndx]->SetCoverlayerHZ(val*m_unitsMap[m_currentAtt]);
+					float val = atof(tempContent.c_str());
+					m_detsGeo[m_firstIndx]->SetCoverlayerHZ(val*m_unitsMap[m_currentAtt]);
 
-                }else if(m_currentNodeName == __coverlayer_mat_S){
+				}else if(m_currentNodeName == __coverlayer_mat_S){
 
-                    G4String valS(tempContent);
-                    m_detsGeo[m_firstIndx]->SetCoverlayerMat(valS);
+					G4String valS(tempContent);
+					m_detsGeo[m_firstIndx]->SetCoverlayerMat(valS);
 
-                }else if(m_currentNodeName == __sensor_posx_S){
+				}else if(m_currentNodeName == __sensor_posx_S){
 
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetSensorPosX(val*m_unitsMap[m_currentAtt]);
@@ -387,29 +392,29 @@ void ReadGeoDescription::ParseContext(TXMLNode *node)
 					m_detsGeo[m_firstIndx]->SetSensorDigitizer(valS);
 
 				}
-	
+
 				else if(m_currentNodeName == __sensor_Resistivity){
 
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetResistivity(val);
 
 				}				
-				
-				
+
+
 				else if(m_currentNodeName == __MIP_Tot_S){
 
 					float val = atoi(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetMIPTot(val);
 
 				}
-				
+
 				else if(m_currentNodeName == __MIP_Charge_S){
 
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetMIPCharge(val);
 
 				}
-								
+
 				else if(m_currentNodeName == __Counter_Depth_S){
 
 					float val = atoi(tempContent.c_str());
@@ -423,7 +428,7 @@ void ReadGeoDescription::ParseContext(TXMLNode *node)
 					m_detsGeo[m_firstIndx]->SetClockUnit(val);
 
 				}					
-				
+
 				else if(m_currentNodeName == __Chip_Noise_S){
 
 					float val = atof(tempContent.c_str());
@@ -437,14 +442,14 @@ void ReadGeoDescription::ParseContext(TXMLNode *node)
 					m_detsGeo[m_firstIndx]->SetThreshold(val);
 
 				}
-				
+
 				else if(m_currentNodeName == __Cross_Talk_S){
 
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetCrossTalk(val);
 
 				}
-								
+
 
 				else if(m_currentNodeName == __Saturation_Energy_S){
 
@@ -452,21 +457,21 @@ void ReadGeoDescription::ParseContext(TXMLNode *node)
 					m_detsGeo[m_firstIndx]->SetSaturationEnergy(val);
 
 				}
-								
+
 				else if(m_currentNodeName == __Bump_Radius_S){
 
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetBumpRadius(val*m_unitsMap[m_currentAtt]);
 
 				}
-				
+
 				else if(m_currentNodeName == __Bump_Height_S){
 
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetBumpHeight(val*m_unitsMap[m_currentAtt]);
 
 				}
-				
+
 				else if(m_currentNodeName == __Bump_OffsetX_S){
 
 					float val = atof(tempContent.c_str());
@@ -487,9 +492,30 @@ void ReadGeoDescription::ParseContext(TXMLNode *node)
 					m_detsGeo[m_firstIndx]->SetBumpDr(val*m_unitsMap[m_currentAtt]);
 
 				}
-				
+
+				// Strips specific
+				else if(m_currentNodeName == __bias_voltage_S){
+					float val = atof(tempContent.c_str());
+					m_detsGeo[m_firstIndx]->SetBiasVoltage(val*m_unitsMap[m_currentAtt]);
+				}
+
+				else if (m_currentNodeName == __depletion_voltage_S){
+					float val = atof(tempContent.c_str());
+					m_detsGeo[m_firstIndx]->SetDepletionVoltage(val*m_unitsMap[m_currentAtt]);
+				}
+
+				else if (m_currentNodeName == __threshold_S) {
+					float val = atof(tempContent.c_str());
+					m_detsGeo[m_firstIndx]->SetThreshold(val*m_unitsMap[m_currentAtt]);
+				}
+
+				else if ((m_currentNodeName) == __sensor_temperature_S){
+					float val = atof(tempContent.c_str());
+					m_detsGeo[m_firstIndx]->SetSensorTemperature(val*m_unitsMap[m_currentAtt]);
+				}
+
 			}
-			
+
 			/*
 			if(StringIsRelevant(tempContent))
 				cout << "+" << tempContent << "-" << endl;

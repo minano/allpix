@@ -153,7 +153,10 @@ public:
 
     G4bool GetEFieldBoolean(){return m_efieldfromfile;};
 
-
+	// Strips specific
+	G4double GetDepletionVoltage() { return m_depletionVoltage;}
+	G4double GetBiasVoltage() { return m_biasVoltage;}
+	G4double GetSensorTemperature() {return m_sensorTemperature;}
 
     ///////////////////////////////////////
     // Set
@@ -358,6 +361,22 @@ public:
 
     G4String GetSensorDigitizer(){return m_digitizer;};
 
+
+	// Strips
+
+	void SetDepletionVoltage(G4double val) {
+		m_depletionVoltage = val;
+	}
+
+	void SetBiasVoltage(G4double val){
+		m_biasVoltage = val;
+	}
+
+	void SetSensorTemperature(G4double val){
+		m_sensorTemperature = val;
+	}
+
+
     ///////////////////////////////////////////////////
     // extras
     void Dump();
@@ -443,6 +462,11 @@ private:
 	G4int m_efieldmap_nx, m_efieldmap_ny, m_efieldmap_nz;
 
 	G4bool m_efieldfromfile;
+
+	// Strips
+	G4double m_depletionVoltage;
+	G4double m_biasVoltage;
+	G4double m_sensorTemperature;
 
 };
 

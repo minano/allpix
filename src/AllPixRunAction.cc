@@ -33,6 +33,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+#include "AllPixDebug.h"
+
 // Make this appear first!
 #include "G4Timer.hh"
 #include "G4Run.hh"
@@ -48,6 +50,8 @@
 #include <vector>
 #include <string>
 using namespace std;
+
+extern DebugLevel debug;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -117,7 +121,7 @@ G4Run * AllPixRunAction::GenerateRun(){
 
 void AllPixRunAction::BeginOfRunAction(const G4Run* aRun)
 {
-  G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
+  if (debug>=INFO) G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
   timer->Start();
 
   if(aRun->GetRunID()==0){
@@ -177,7 +181,7 @@ void AllPixRunAction::EndOfRunAction(const G4Run* aRun)
   G4bool eventIDflag  = AllPixMessenger->GetTimepixTelescopeDoEventFlag();
   G4bool sumTOTflag   = AllPixMessenger->GetTimepixTelescopeSumTOTFlag();
   if (writeFlag) {
-    G4cout << "Filling telescope files" << G4endl;
+    if (debug>=INFO) G4cout << "Filling telescope files" << G4endl;
     m_AllPixRun->FillTelescopeFiles(aRun,folderName,eventIDflag,sumTOTflag);
   }
 
@@ -189,7 +193,7 @@ void AllPixRunAction::EndOfRunAction(const G4Run* aRun)
       m_AllPixRun->FillROOTFiles(writeROOTFile);
     }
   timer->Stop();
-  G4cout << "event Id = " << aRun->GetNumberOfEvent()
+  if (debug>=INFO) G4cout << "event Id = " << aRun->GetNumberOfEvent()
 	 << " " << *timer << G4endl;    
      
 

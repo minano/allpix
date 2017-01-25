@@ -22,7 +22,7 @@
 /allpix/extras/setTestStructureDetLink 301
 # Mimosa detector
 /allpix/det/setId        301
-/allpix/det/setPosition   0.1 0.1 153.0 mm
+/allpix/det/setPosition   0.1 0.1 150.0 mm
 /allpix/det/setRotation   0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -48,7 +48,7 @@
 /allpix/extras/setTestStructureDetLink 303
 # Mimosa detector
 /allpix/det/setId        303
-/allpix/det/setPosition   0.3 0.3 380.0 mm
+/allpix/det/setPosition   0.3 0.3 458.0 mm
 /allpix/det/setRotation   0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -61,7 +61,7 @@
 /allpix/extras/setTestStructureDetLink 304
 # Mimosa detector
 /allpix/det/setId        304
-/allpix/det/setPosition  0.4 0.4 515 mm
+/allpix/det/setPosition  0.4 0.4 609.0 mm
 /allpix/det/setRotation  0.0 180.0 180 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -74,7 +74,7 @@
 /allpix/extras/setTestStructureDetLink 305
 # Mimosa detector
 /allpix/det/setId        305
-/allpix/det/setPosition  0.5 0.5 667.0 mm
+/allpix/det/setPosition  0.5 0.5 759.0 mm
 /allpix/det/setRotation  0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -84,7 +84,7 @@
 #### DUT #### 
 ####################################################################
 /allpix/det/setId        8
-/allpix/det/setPosition   0.0 0.0 350.0 mm
+/allpix/det/setPosition   0.0 0.0 375.0 mm
 /allpix/det/setRotation   0.0 180.0 180.00 deg
 ####################################################################
 
@@ -156,15 +156,19 @@
 ####################################################################
 # Source GPS
 /gps/particle pi-
-/gps/pos/type Beam
-/gps/pos/sigma_r 5.0 mm
-/gps/pos/centre 0 0 -100.0 mm
+/gps/pos/type Point
+/gps/pos/shape Rectangle
+/gps/pos/centre -0.072 0.0 -100.0 mm
 /gps/direction  0 0 1
 
-/gps/ene/type User
-/gps/hist/type energy
+/gps/ene/type Gauss
+/gps/energy 120.0 GeV
+/gps/ene/sigma 2.0 GeV
+
+#/gps/ene/type User
+#/gps/hist/type energy
 # spectra
-/gps/hist/point 120000 1
+#/gps/hist/point 120000 1
 
 /gps/source/list
 
@@ -182,7 +186,7 @@
 
 ####################################################################
 # Shoot
-/allpix/beam/frames 1000
+/allpix/beam/frames 1
 #/allpix/beam/type const 50
 /allpix/beam/type const 1
 /allpix/beam/on

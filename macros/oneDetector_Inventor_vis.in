@@ -92,7 +92,7 @@
 
 #########################
 # GPS
-/gps/particle e-
+/gps/particle pi-
 /gps/pos/type Plane
 #/gps/pos/rot1 0 0 1
 #/gps/pos/rot2 1 0 0
@@ -104,7 +104,7 @@
 /gps/ene/type User
 /gps/hist/type energy
 # spectra
-/gps/hist/point 2.2 1
+/gps/hist/point 120.0 1
 
 /gps/source/list
 

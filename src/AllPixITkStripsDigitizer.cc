@@ -86,8 +86,8 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 	m_precision = 10; // Precision of charge propagation
 
 	if (debug>ERROR) {
-		G4cout << " [AllPixITkStripDigitizer] Bias voltage " << m_biasVoltage << "V" << endl;
-		G4cout << " [AllPixITkStripDigitizer] Depletion voltage " << m_depletionVoltage << "V" << endl;
+		G4cout << " [AllPixITkStripDigitizer] Bias voltage " << m_biasVoltage << "V" << G4endl;
+		G4cout << " [AllPixITkStripDigitizer] Depletion voltage " << m_depletionVoltage << "V" << G4endl;
 		G4cout << " [AllPixITkStripDigitizer] threshold " << m_inputParameter.thl/eV << " eV " << TString::Format(" %d pairs\n", getThresholdPairs());
 		G4cout << " [AllPixITkStripDigitizer] Sensor temperature " << m_temperature << " K " << G4endl;
 		G4cout << " [AllPixITkStripDigitizer] Detector w = " << m_detectorWidth/mm << " mm" << G4endl;
@@ -104,6 +104,7 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 }
 
 AllPixITkStripsDigitizer::~AllPixITkStripsDigitizer(){
+	if (debug>=INFO) G4cout << " [AllPixITkStripsDigitizer] Destructor." << G4endl;
 	if (debug == DEBUG)
 		fclose(m_testFile);
 
@@ -128,7 +129,7 @@ G4double AllPixITkStripsDigitizer::getMobility(double x, double y, double z, Car
 		beta = 0.46*pow(m_temperature,0.17);
 	}
 	else {
-		cout << " Carrier undefinied!" << endl;
+		G4cout << " Carrier undefinied!" << G4endl;
 		exit(-1);
 	}
 
@@ -172,7 +173,7 @@ double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 	if (z<-m_detectorWidth/2. or z>m_detectorWidth/2.) {
 		if (debug==DEBUG) {
 			G4cout << TString::Format(" [ITkStripDigitizer::EField1D] E = 0 V/cm") << G4endl;
-		cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip." << endl;
+		G4cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip." << G4endl;
 		}
 				return 0.0;
 	}
@@ -185,7 +186,7 @@ double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 
 	if(z>m_depletionDepth){
 		electricFieldZ=0;
-		//cout << "bip" << endl;
+		//G4cout << "bip" << G4endl;
 	}
 
 	//double electricField = std::sqrt(electricFieldX*electricFieldX + electricFieldY*electricFieldY + electricFieldZ*electricFieldZ);
@@ -212,7 +213,7 @@ G4double AllPixITkStripsDigitizer::getDriftTime(G4double z, CarrierType carrier,
 		ElectricField _E = getEField1D(0,0,z);
 
 		if (_E != 0) {
-			if (debug==DEBUG) G4cout << " [ComputeDriftTime] Fast ballistic calculaton of drift time." << endl;
+			if (debug==DEBUG) G4cout << " [ComputeDriftTime] Fast ballistic calculaton of drift time." << G4endl;
 			// tz is transformation vector to c.s. I quadrant
 			double tz = z + m_detectorWidth/2.;
 			// w is the traversed path by electron
@@ -229,7 +230,7 @@ G4double AllPixITkStripsDigitizer::getDriftTime(G4double z, CarrierType carrier,
 	}
 	else
 	{
-		if (debug==DEBUG) G4cout << " [ComputeDriftTime] Numeric integration." << endl;
+		if (debug==DEBUG) G4cout << " [ComputeDriftTime] Numeric integration." << G4endl;
 		array<double,4> finalVector = getDriftVector(0,0,z);
 		drift = finalVector.at(3);
 
@@ -246,14 +247,14 @@ array<double,4>  AllPixITkStripsDigitizer::getDriftVector(double x, double y, do
 	G4double xtemp=x;
 	G4double ytemp=y;
 	G4double ztemp=z;
-	//cout << "z : " << z/um << endl;
+	//G4cout << "z : " << z/um << G4endl;
 	//vector<G4double> step;
 	array<double,4> step;
 	int counter=0;
 
 	//vector<G4double> vx,vy,vz,vt;
 
-	if (debug>INFO) cout << " [AllPixITkStripDigitizer::getDriftVector]" << endl;
+	if (debug>INFO) G4cout << " [AllPixITkStripDigitizer::getDriftVector]" << G4endl;
 
 	int iter =0;
 	while( ztemp>-m_detectorWidth/2.0 && ztemp<m_detectorWidth/2.0 && iter<kIterations){
@@ -295,8 +296,8 @@ array<double,4>  AllPixITkStripsDigitizer::getDriftVector(double x, double y, do
 			fprintf(m_testFile, "ixyz %d %f %f %f\n",iter, xtemp/um, ytemp/um, ztemp/um);
 	}
 	if (debug == DEBUG) {
-		cout << " [AllPixITkStripDigitizer::getDriftVector] No. of iterations : " << iter << endl;
-		cout << " [AllPixITkStripDigitizer::getDriftVector] After drift x : " << xtemp/um << " y : " << ytemp/um << " z : " << ztemp/um << " t : " << driftTime/ns << endl;
+		G4cout << " [AllPixITkStripDigitizer::getDriftVector] No. of iterations : " << iter << G4endl;
+		G4cout << " [AllPixITkStripDigitizer::getDriftVector] After drift x : " << xtemp/um << " y : " << ytemp/um << " z : " << ztemp/um << " t : " << driftTime/ns << G4endl;
 	}
 
 	m_stepSize = dt;
@@ -315,7 +316,7 @@ G4double  AllPixITkStripsDigitizer::setDt(G4double dt, G4double ErreurMoy)
 
 	double Dt=dt;
 
-	if (debug == DEBUG) cout << " [AllPixITkStripDigitizer::setDt] Starting dt : " << Dt/ns << endl;
+	if (debug == DEBUG) G4cout << " [AllPixITkStripDigitizer::setDt] Starting dt : " << Dt/ns << G4endl;
 
 	//if(isnan(ErreurMoy)){Dt=tup;}
 	if (ErreurMoy != ErreurMoy)
@@ -327,7 +328,7 @@ G4double  AllPixITkStripsDigitizer::setDt(G4double dt, G4double ErreurMoy)
 	if(Dt<m_tStepL) Dt = m_tStepL;
 	if(Dt>m_tStepU) Dt = m_tStepU;
 
-	if(debug==DEBUG) cout << " [AllPixITkStripDigitizer::setDt] Changed to dt : " << Dt/ns << endl;
+	if(debug==DEBUG) G4cout << " [AllPixITkStripDigitizer::setDt] Changed to dt : " << Dt/ns << G4endl;
 	return Dt;
 
 }
@@ -351,8 +352,8 @@ G4double AllPixITkStripsDigitizer::getDiffusionLRMS(G4double tDrift)
 
 G4double AllPixITkStripsDigitizer::IntegrateGaussian(G4double xhit, G4double yhit, G4double Sigma, G4double x1, G4double x2, G4double y1, G4double y2, G4double Energy )
 {
-	//G4cout << TString::Format("Integration borns xhit=%f yhit=%f x1=%f x2=%f y1=%f y2=%f",xhit/1e3,yhit/1e3,x1/1e3,x2/1e3,y1/1e3,y2/1e3) << endl;
-	//G4cout << TString::Format("TMath::Erf test %f %f %f %f",TMath::Erf((x1 - xhit)/(Sqrt(2.)*Sigma)),TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.)*Sigma)))<< endl;
+	//G4cout << TString::Format("Integration borns xhit=%f yhit=%f x1=%f x2=%f y1=%f y2=%f",xhit/1e3,yhit/1e3,x1/1e3,x2/1e3,y1/1e3,y2/1e3) << G4endl;
+	//G4cout << TString::Format("TMath::Erf test %f %f %f %f",TMath::Erf((x1 - xhit)/(Sqrt(2.)*Sigma)),TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.)*Sigma)))<< G4endl;
 
 	//G4cout << " [AllPixITkStripDigitizer::IntegrateGaussian]" << G4endl <<
 	//	TString::Format("                             xhit %f yhit %f L %f x1 %f x2 %f y1 %f y2 %f", xhit, yhit, Sigma, x1, x2, y1, y2)<< G4endl;
@@ -361,7 +362,7 @@ G4double AllPixITkStripsDigitizer::IntegrateGaussian(G4double xhit, G4double yhi
 			*(-TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.0)*Sigma))))/4.;
 
 	if (debug> INFO) {
-		G4cout << " Energy : " << energybis/eV << " [eV] Pairs : " << floor(energybis/kPairEnergy) << endl;
+		G4cout << " Energy : " << energybis/eV << " [eV] Pairs : " << floor(energybis/kPairEnergy) << G4endl;
 	}
 	return energybis;
 
@@ -402,11 +403,23 @@ void AllPixITkStripsDigitizer::Digitize(){
 			hitEnergy = 0.0;
 		//pixelsContent[currentStrip] += hitEnergy;
 
+		// Hit position in the global system
 		if (debug>=INFO) {
 			G4ThreeVector position = hit->GetPos();
 			G4cout << " [ITkStripDigitizer::Digitize] Hit = "<< " X Y Z "<< position.x() << " "<< position.y() << " "<< position.z()<< G4endl;
-			G4cout << " [ITkStripDigitizer::Digitize] Strip = "<< currentStrip.first<< " Row = "<< currentStrip.second<< " Energy [eV]= "<< hit->GetEdep()/eV << G4endl;
-			G4cout << " [ITkStripDigitizer::Digitize] Process name = "<< hit->GetProcessName() << G4endl;
+			G4cout << " [ITkStripDigitizer::Digitize] Strip = "<< currentStrip.first<< " Row = "<< currentStrip.second << G4endl;
+			G4cout << " [ITkStripDigitizer::Digitize] Energy [keV]= "<< hit->GetEdep()/keV << " Process name = "<< hit->GetProcessName() << G4endl;
+		}
+
+		// Hit in local c. s. of a strip
+		const G4double hitLocalX = (hit->GetPosWithRespectToPixel()).x();
+		const G4double hitLocalY = (hit->GetPosWithRespectToPixel()).y();
+		const G4double hitLocalZ = (hit->GetPosWithRespectToPixel()).z();
+
+		if (debug>=INFO) {
+			G4cout << " [ITkStripDigitizer::Digitize] Local x [um] = "<< hitLocalX/um << G4endl;
+			G4cout << " [ITkStripDigitizer::Digitize] Local y [um] = "<< hitLocalY/um << G4endl;
+			G4cout << " [ITkStripDigitizer::Digitize] Local z [um] = "<< hitLocalZ/um << G4endl;
 		}
 
 		// Should the energy be spread?
@@ -420,17 +433,7 @@ void AllPixITkStripsDigitizer::Digitize(){
 
 			double eHit = double(eHitTotal)/m_precision; // Should be 2*precision, if including holes
 
-			// Calculate drift time from the hit position to the electrode
-			const G4double hitLocalX = (hit->GetPosWithRespectToPixel()).x();
-			const G4double hitLocalY = (hit->GetPosWithRespectToPixel()).y();
-			const G4double hitLocalZ = (hit->GetPosWithRespectToPixel()).z();
-
-			if (debug==DEBUG) {
-				G4cout << " [ITkStripDigitizer::Digitize] Local x [um] = "<< hitLocalX/um << G4endl;
-				G4cout << " [ITkStripDigitizer::Digitize] Local y [um] = "<< hitLocalY/um << G4endl;
-				G4cout << " [ITkStripDigitizer::Digitize] Local z [um] = "<< hitLocalZ/um << G4endl;
-				G4cout << " [ITkStripDigitizer::Digitize] Bunch [eV]   = " << eHit/eV << G4endl;
-			}
+			if (debug==DEBUG) G4cout << " [ITkStripDigitizer::Digitize] Bunch [eV]   = " << eHit/eV << G4endl;
 			if (eHit/eV < kMinEnergy) continue;
 
 			const double driftTime = getDriftTime(hitLocalZ, Electron, m_doFast);
@@ -520,7 +523,7 @@ void AllPixITkStripsDigitizer::Digitize(){
 
 				if (debug>=INFO) {
 					G4cout << " [ITkStripsDigitizer::Digitize] Total energy in strip " << digit->GetPixelIDX()
-							<< " = " << digit->GetPixelEnergyDep()/MeV << " MeV, counts = " <<digit->GetPixelCounts() << endl;
+							<< " = " << digit->GetPixelEnergyDep()/MeV << " MeV, counts = " <<digit->GetPixelCounts() << G4endl;
 					G4cout << " Collection size " << collectionSize << G4endl;
 				}
 			}
@@ -550,7 +553,7 @@ array<double,4>  AllPixITkStripsDigitizer::RKF5IntegrationElectrons(G4double x, 
 	k1x=-getMobility(x, y, z, Electron)*electricFieldX*dt;
 	k1y=-getMobility(x, y, z, Electron)*electricFieldY*dt;
 	k1z=-getMobility(x, y, z, Electron)*electricFieldZ*dt;
-	if (debug == DEBUG) cout << " [AllPixITkStripDigitizer::RKF5IntegrationElectrons] k1x : "<<k1x<<", k1y : " << k1y << ", k1z : " << k1z << endl;
+	if (debug == DEBUG) G4cout << " [AllPixITkStripDigitizer::RKF5IntegrationElectrons] k1x : "<<k1x<<", k1y : " << k1y << ", k1z : " << k1z << G4endl;
 
 	electricFieldZ = getEField1D(x+k1x/4,y+k1y/4,z+k1z/4);
 
@@ -600,7 +603,7 @@ array<double,4>  AllPixITkStripsDigitizer::RKF5IntegrationElectrons(G4double x, 
 	Ez=((1./360)*k1z-(128./4275)*k3z-(2197./75240)*k4z-(1./50)*k5z+(2./55)*k6z);
 	Erreur=sqrt(Ex*Ex+Ey*Ey+Ez*Ez);
 
-	if (debug == DEBUG) cout << " [AllPixITkStripDigitizer::RKF5IntegrationElectrons] k6x : "<<k6x<<", k6y : " << k6y << ", k6z : " << k6z << endl;
+	if (debug == DEBUG) G4cout << " [AllPixITkStripDigitizer::RKF5IntegrationElectrons] k6x : "<<k6x<<", k6y : " << k6y << ", k6z : " << k6z << G4endl;
 
 	array<double,4> newpoint;
 	newpoint.at(0)=(dx);

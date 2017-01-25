@@ -156,9 +156,13 @@
 ####################################################################
 # Source GPS
 /gps/particle pi-
-/gps/pos/type Beam
-/gps/pos/sigma_r 5.0 mm
-/gps/pos/centre 0 0 -100.0 mm
+/gps/pos/type Point
+#edge between strips 50/51
+#/gps/pos/centre -0.075 4.0 -100.0 mm
+#centre of strip 51
+/gps/pos/centre -0.036 4.0 -100.0 mm
+# edge between strips 51/52
+#/gps/pos/centre 0.0 4.0 -100.0 mm
 /gps/direction  0 0 1
 
 /gps/ene/type User
@@ -182,7 +186,7 @@
 
 ####################################################################
 # Shoot
-/allpix/beam/frames 1000
+/allpix/beam/frames 1
 #/allpix/beam/type const 50
 /allpix/beam/type const 1
 /allpix/beam/on

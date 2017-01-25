@@ -83,7 +83,7 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 	m_tStepU=	0.5*ns;
 	m_stepSize = m_tStepU/10.;
 
-	m_precision = 10; // Precision of charge propagation
+	m_precision = 1; // Precision of charge propagation
 
 	if (debug>ERROR) {
 		G4cout << " [AllPixITkStripDigitizer] Bias voltage " << m_biasVoltage << "V" << endl;
@@ -134,14 +134,14 @@ G4double AllPixITkStripsDigitizer::getMobility(double x, double y, double z, Car
 
 	ElectricField _E = getEField1D(x, y, z);
 	G4double mobility = (saturationV/criticalE) / pow(1+pow((_E/criticalE), beta), (1/beta));
-	if (debug>INFO) {
+	/*if (debug>INFO) {
 		if (carrier == Electron)
 			G4cout << " [AllPixITkStripDigitizer] mu_e [cm2/Vs] = " <<
 			mobility/ cm2 * s << G4endl;
 		else
 			G4cout << " [AllPixITkStripDigitizer] mu_h [cm2/Vs] = " <<
 			mobility /cm2 * s << G4endl;
-	}
+	}*/
 
 	if (carrier == Electron) mobility *= -1;
 
@@ -154,7 +154,7 @@ G4double AllPixITkStripsDigitizer::GetDriftVelocity(double x, double y, double z
 	double Mobility = getMobility(x, y, z, carrier);
 	G4double driftVelocity = Mobility*electricField;
 	if(carrier == Hole) driftVelocity = -1*driftVelocity; // Drifts in opposite direction
-	if (debug > ERROR) G4cout << " [AllPixITkStripDigitizer] v = " << driftVelocity/cm*s << " cm/s " << G4endl;
+	//if (debug > ERROR) G4cout << " [AllPixITkStripDigitizer] v = " << driftVelocity/cm*s << " cm/s " << G4endl;
 	return driftVelocity;
 }
 
@@ -172,9 +172,9 @@ double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 	if (z<-m_detectorWidth/2. or z>m_detectorWidth/2.) {
 		if (debug==DEBUG) {
 			G4cout << TString::Format(" [ITkStripDigitizer::EField1D] E = 0 V/cm") << G4endl;
-		cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip." << endl;
+			cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip." << endl;
 		}
-				return 0.0;
+		return 0.0;
 	}
 	//if(readoutType==ELECTRON)
 	//{
@@ -189,8 +189,7 @@ double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 	}
 
 	//double electricField = std::sqrt(electricFieldX*electricFieldX + electricFieldY*electricFieldY + electricFieldZ*electricFieldZ);
-	if (debug==DEBUG) G4cout << TString::Format(" [ITkStripDigitizer::EField1D] E = %g V/cm", electricFieldZ*cm)
-	<< G4endl;
+	//if (debug==DEBUG) G4cout << TString::Format(" [ITkStripDigitizer::EField1D] E = %g V/cm", electricFieldZ*cm)<< G4endl;
 	return electricFieldZ;
 }
 
@@ -212,7 +211,7 @@ G4double AllPixITkStripsDigitizer::getDriftTime(G4double z, CarrierType carrier,
 		ElectricField _E = getEField1D(0,0,z);
 
 		if (_E != 0) {
-			if (debug==DEBUG) G4cout << " [ComputeDriftTime] Fast ballistic calculaton of drift time." << endl;
+			if (debug==DEBUG) G4cout << " [ComputeDriftTime] Fast ballistic calculation of drift time." << endl;
 			// tz is transformation vector to c.s. I quadrant
 			double tz = z + m_detectorWidth/2.;
 			// w is the traversed path by electron
@@ -349,7 +348,8 @@ G4double AllPixITkStripsDigitizer::getDiffusionLRMS(G4double tDrift)
 
 
 
-G4double AllPixITkStripsDigitizer::IntegrateGaussian(G4double xhit, G4double yhit, G4double Sigma, G4double x1, G4double x2, G4double y1, G4double y2, G4double Energy )
+G4double AllPixITkStripsDigitizer::IntegrateGaussian(G4double xhit, G4double yhit, G4double Sigma,
+		G4double x1, G4double x2, G4double y1, G4double y2, G4double Energy )
 {
 	//G4cout << TString::Format("Integration borns xhit=%f yhit=%f x1=%f x2=%f y1=%f y2=%f",xhit/1e3,yhit/1e3,x1/1e3,x2/1e3,y1/1e3,y2/1e3) << endl;
 	//G4cout << TString::Format("TMath::Erf test %f %f %f %f",TMath::Erf((x1 - xhit)/(Sqrt(2.)*Sigma)),TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.)*Sigma)))<< endl;
@@ -357,13 +357,16 @@ G4double AllPixITkStripsDigitizer::IntegrateGaussian(G4double xhit, G4double yhi
 	//G4cout << " [AllPixITkStripDigitizer::IntegrateGaussian]" << G4endl <<
 	//	TString::Format("                             xhit %f yhit %f L %f x1 %f x2 %f y1 %f y2 %f", xhit, yhit, Sigma, x1, x2, y1, y2)<< G4endl;
 
-	double energybis= (Energy*(-TMath::Erf((x1 - xhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)))
-			*(-TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.0)*Sigma))))/4.;
+	Energy /= eV; /* convert to eV */
+	double energybis= (-TMath::Erf((x1 - xhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)));
+	energybis *=      (-TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.)*Sigma)));
+	energybis *= Energy/4.0;
 
 	if (debug> INFO) {
-		G4cout << " Energy : " << energybis/eV << " [eV] Pairs : " << floor(energybis/kPairEnergy) << endl;
+		G4cout << " [AllPixITkStripsDigitizer::IntegrateGaussian] Energy : " << energybis/eV << " [eV] Pairs : " << floor(energybis/kPairEnergy) << endl;
 	}
-	return energybis;
+	/* convert back to system units */
+	return energybis*eV;
 
 }
 
@@ -382,12 +385,14 @@ void AllPixITkStripsDigitizer::Digitize(){
 	hitsCollection = (AllPixTrackerHitsCollection*)(digiMan->GetHitsCollection(hcID));
 
 	// temporary data structure
-	map<pair<G4int, G4int>, G4double > pixelsContent; //! ((x,y), depositedEnergy)
+	map<pair<G4int, G4int>, G4double > stripContent; //! ((x,y), depositedEnergy)
 	pair<G4int, G4int> currentStrip;
 
 	G4int nEntries = hitsCollection->entries();
 
 	// Loop over hits, deposition of energy along particle path
+
+	float depositedEnergy = 0;
 
 	for(G4int iHit  = 0 ; iHit < nEntries ; iHit++) {
 		AllPixTrackerHit* hit = (*hitsCollection)[iHit];
@@ -402,10 +407,18 @@ void AllPixITkStripsDigitizer::Digitize(){
 			hitEnergy = 0.0;
 		//pixelsContent[currentStrip] += hitEnergy;
 
+		// Calculate drift time from the hit position to the electrode
+		const G4double hitLocalX = (hit->GetPosWithRespectToPixel()).x();
+		const G4double hitLocalY = (hit->GetPosWithRespectToPixel()).y();
+		const G4double hitLocalZ = (hit->GetPosWithRespectToPixel()).z();
+
 		if (debug>=INFO) {
 			G4ThreeVector position = hit->GetPos();
 			G4cout << " [ITkStripDigitizer::Digitize] Hit = "<< " X Y Z "<< position.x() << " "<< position.y() << " "<< position.z()<< G4endl;
 			G4cout << " [ITkStripDigitizer::Digitize] Strip = "<< currentStrip.first<< " Row = "<< currentStrip.second<< " Energy [eV]= "<< hit->GetEdep()/eV << G4endl;
+			G4cout << " [ITkStripDigitizer::Digitize] Local x [um] = "<< hitLocalX/um << G4endl;
+			G4cout << " [ITkStripDigitizer::Digitize] Local y [um] = "<< hitLocalY/um << G4endl;
+			G4cout << " [ITkStripDigitizer::Digitize] Local z [um] = "<< hitLocalZ/um << G4endl;
 			G4cout << " [ITkStripDigitizer::Digitize] Process name = "<< hit->GetProcessName() << G4endl;
 		}
 
@@ -415,21 +428,15 @@ void AllPixITkStripsDigitizer::Digitize(){
 		// underdepletion
 		eHitTotal *= m_depletionDepth/m_detectorWidth;
 
+		pair<G4int, G4int> extraStrip; /* In case there is charge sharing. */
+
 		// Propagate electrons to electrode in bunches instead of individual pairs
 		for(G4int nQ  = 0 ; nQ < m_precision ; nQ++) {
 
 			double eHit = double(eHitTotal)/m_precision; // Should be 2*precision, if including holes
 
-			// Calculate drift time from the hit position to the electrode
-			const G4double hitLocalX = (hit->GetPosWithRespectToPixel()).x();
-			const G4double hitLocalY = (hit->GetPosWithRespectToPixel()).y();
-			const G4double hitLocalZ = (hit->GetPosWithRespectToPixel()).z();
-
 			if (debug==DEBUG) {
-				G4cout << " [ITkStripDigitizer::Digitize] Local x [um] = "<< hitLocalX/um << G4endl;
-				G4cout << " [ITkStripDigitizer::Digitize] Local y [um] = "<< hitLocalY/um << G4endl;
-				G4cout << " [ITkStripDigitizer::Digitize] Local z [um] = "<< hitLocalZ/um << G4endl;
-				G4cout << " [ITkStripDigitizer::Digitize] Bunch [eV]   = " << eHit/eV << G4endl;
+				G4cout << " [ITkStripDigitizer::Digitize] Bunch " << nQ <<" dE [eV]   = " << eHit/eV << G4endl;
 			}
 			if (eHit/eV < kMinEnergy) continue;
 
@@ -437,100 +444,133 @@ void AllPixITkStripsDigitizer::Digitize(){
 
 
 			// charge share integration boundaries +-2*DiffusionSigma
-			const double diffusionWidth = getDiffusionLRMS(driftTime);
+			const double diffusionWidth = 3 * getDiffusionLRMS(driftTime);
 
 			// Is there charge sharing - diffusion
-			if ((hitLocalX > m_pitchX/2. - 3 * diffusionWidth) or (hitLocalX < - m_pitchX/2. + 3 * diffusionWidth)) {
-				// Loop over neighbour strips
+			if (hitLocalX > m_pitchX/2. - diffusionWidth) {
+				// Main strip
+				double stripEnergy = IntegrateGaussian(hitLocalX/um, hitLocalY/um, diffusionWidth/um,
+						(-m_pitchX/2.0)/um, (m_pitchX/2.0)/um,
+						(-m_pitchY/2.0)/um, (m_pitchY/2.0)/um, eHit);
+				stripContent[currentStrip] += stripEnergy;
+				depositedEnergy += stripEnergy;
+
+				/* There is charge sharing into the right strip */
+				extraStrip.first = currentStrip.first + 1;
+				extraStrip.second = currentStrip.second;
+
+				if(extraStrip.first >= 0 && extraStrip.second>=0 && extraStrip.first < m_nStrips && extraStrip.second < m_nRows)
+				{
+				double sharedEnergy = IntegrateGaussian(hitLocalX/um, hitLocalY/um, diffusionWidth/um,
+							(-m_pitchX/2.0 + m_pitchX)/um, (-m_pitchX/2.+ 2*m_pitchX)/um,
+							//(-m_pitchY/2 + j*m_pitchY)/nm, (-m_pitchY/2 + (j+1)*m_pitchY)/nm, eHit);
+							(-m_pitchY/2.0)/um, (m_pitchY/2.0)/um, eHit);
+				stripContent[extraStrip] += sharedEnergy;
+				depositedEnergy += sharedEnergy;
+
+				if (debug==DEBUG) G4cout << TString::Format(" [ITkStripDigitizer::Digitize] Bunch %d Deposited energy: %f eV\n", nQ, stripContent[extraStrip]/eV);
+			}
+			}
+
+			else if (hitLocalX < - m_pitchX/2. + diffusionWidth) {
+
+				// Main strip
+				double stripEnergy = IntegrateGaussian(hitLocalX/um, hitLocalY/um, diffusionWidth/um,
+						(-m_pitchX/2.0)/um, (m_pitchX/2.0)/um,
+						(-m_pitchY/2.0)/um, (m_pitchY/2.0)/um, eHit);
+				stripContent[currentStrip] += stripEnergy;
+				depositedEnergy += stripEnergy;
+
+				// There is charge sharing into the left strip
 				// Charge sharing between strips, only in X
-				pair<G4int, G4int> extraStrip = currentStrip;
 
-				for(int i=-1;i<=1;i++){
-					extraStrip.first = currentStrip.first + i;
-					//for(int j=-nseek;j<=nseek;j++){
-						if (debug==DEBUG) G4cout << TString::Format(" [ITkStripDigitizer::Digitize] strip %d row %d \n", extraStrip.first, extraStrip.second);
+				extraStrip.first = currentStrip.first - 1;
+				extraStrip.second = currentStrip.second;
 
-						//extraStrip.second += j;
-						if(extraStrip.first >= 0 && extraStrip.second>=0 && extraStrip.first < m_nStrips && extraStrip.second < m_nRows)
-						{
-							double sharedEnergy = IntegrateGaussian(hitLocalX/um, hitLocalY/um, diffusionWidth/um,
-									(-m_pitchX/2.0 + i*m_pitchX)/um, (-m_pitchX/2.+(i+1)*m_pitchX)/um,
-									//(-m_pitchY/2 + j*m_pitchY)/nm, (-m_pitchY/2 + (j+1)*m_pitchY)/nm, eHit);
-									(-m_pitchY/2)/um, (m_pitchY/2)/um, eHit);
-							pixelsContent[extraStrip] += sharedEnergy;
+				if(extraStrip.first >= 0 && extraStrip.second>=0 && extraStrip.first < m_nStrips && extraStrip.second < m_nRows)
+				{
+					double sharedEnergy = IntegrateGaussian(hitLocalX/um, hitLocalY/um, diffusionWidth/um,
+							(-m_pitchX/2.0 - m_pitchX)/um, (-m_pitchX/2.0)/um,
+							//(-m_pitchY/2 + j*m_pitchY)/nm, (-m_pitchY/2 + (j+1)*m_pitchY)/nm, eHit);
+							(-m_pitchY/2)/um, (m_pitchY/2)/um, eHit);
+					stripContent[extraStrip] += sharedEnergy;
+					depositedEnergy += sharedEnergy;
 
-							if (debug==DEBUG) G4cout << TString::Format(" [ITkStripDigitizer::Digitize] Bunch %d Deposited energy: %f eV\n", nQ, pixelsContent[extraStrip]/eV);
-						}
-					//}
-				} // neighbour stirps
-			} // Charge sharing
-			else {
-				// No charge sharing, add this bunch to current strip
-				pixelsContent[currentStrip] += eHit;
-
-				if (debug==DEBUG) G4cout << TString::Format(" [AllPixITkStripDigitizer::Digitize] No charge sharing. Bunch %d. Adding %f eV to strip %d row %d\n",
-						nQ, eHit/eV, currentStrip.first,currentStrip.second);
-			}
-		} // nQ
-	} // Hits in one strip
-
-
-	//G4cout << TString::Format("Collected energy in pixel : %f eV", );
-
-	// Now create digits, one per strips
-		map<pair<G4int, G4int>, G4double >::iterator iCount = pixelsContent.begin();
-		// Loop over added strips
-		for( ; iCount != pixelsContent.end() ; iCount++)
-		{
-			double depositedEnergy = (*iCount).second;
-			double depositedCharge = depositedEnergy/kPairEnergy * CLHEP::e_SI * coulomb;
-			if (debug >= INFO) G4cout << " Deposited charge [fC]" << depositedCharge/fC <<G4endl;
-
-			const double tau = 21.0 / 3.0 *ns; //ns CR-RC3
-			//const double tau = 22.0 / 2.523 * ns; // CRRC2
-
-			bool crossed = false;
-			for (int timeSlice=m_minTime; timeSlice<m_maxTime; timeSlice++) {
-				double t = timeSlice/tau; // that's what I found in Athena SCT code
-				double Y = 0;
-				// CR-RC3 response, as in SCT
-				if (t>0) Y = depositedCharge / 27.0 * exp(3) * t*t*t * exp(-t);
-				// CR-RC2 response to step
-				//if (t>0) Y = depositedCharge / 6.0 * t*t*t * exp(-t);
-
-				if (crossed == false and Y >= getThresholdCharge()) crossed = true;
-
-				if (m_testFile) fprintf(m_testFile, "FE %d %f\n", timeSlice, Y/fC);
-				if (debug == DEBUG) {
-					if (Y>getThresholdCharge()) printf("Above threshold = %f fC\n", getThresholdCharge()/fC);
-					else printf ("Below threshold = %f fC\n", getThresholdCharge()/fC);
+					if (debug==DEBUG) G4cout << TString::Format(" [ITkStripDigitizer::Digitize] Bunch %d Deposited energy: %f eV\n", nQ, stripContent[extraStrip]/eV);
 				}
-			}
 
-			if( crossed ) // over threshold !
-			{
-				// Create one digit per pixel
-				AllPixITkStripsDigit * digit = new AllPixITkStripsDigit(
-						(*iCount).first.first,
-						(*iCount).first.second,
-						(*iCount).second,
-						m_primaryVertex->GetPosition());
+	   } // Charge sharing
+	else {
+		// No charge sharing, add this bunch to current strip
+		stripContent[currentStrip] += eHit;
+		depositedEnergy += eHit;
 
-				int collectionSize = m_digitsCollection->insert(digit);
-
-				if (debug>=INFO) {
-					G4cout << " [ITkStripsDigitizer::Digitize] Total energy in strip " << digit->GetPixelIDX()
-							<< " = " << digit->GetPixelEnergyDep()/MeV << " MeV, counts = " <<digit->GetPixelCounts() << endl;
-					G4cout << " Collection size " << collectionSize << G4endl;
-				}
-			}
-			else if (debug>=INFO) G4cout << " [ITkStripsDigitizer::Digitize] No digits in strip " << (*iCount).first.first << " in this event." << G4endl;
-		}
-
-
-		StoreDigiCollection(m_digitsCollection);
-
+		if (debug==DEBUG) G4cout << TString::Format(" [AllPixITkStripDigitizer::Digitize] No charge sharing. Bunch %d. Adding %f eV to strip %d row %d\n",
+				nQ, eHit/eV, currentStrip.first,currentStrip.second);
 	}
+} // nQ
+
+} // Hits in one strip
+if (debug>=INFO) G4cout << " [AllPixITkStripDigitizer::Digitize] Total deposited energy keV " << depositedEnergy/keV << G4endl;
+
+//G4cout << TString::Format("Collected energy in pixel : %f eV", );
+
+// Now create digits, one per strips
+map<pair<G4int, G4int>, G4double >::iterator iCount = stripContent.begin();
+// Loop over added strips
+for( ; iCount != stripContent.end() ; iCount++)
+{
+	if (debug==DEBUG) G4cout << " [AllPixITkStripDigitizer::Digitize] iCount " << (*iCount).first.first << G4endl;
+
+	double stripEnergy = (*iCount).second;
+	double depositedCharge = stripEnergy/kPairEnergy * CLHEP::e_SI * coulomb;
+	if (debug >= INFO) G4cout << " Deposited charge [fC]" << depositedCharge/fC <<G4endl;
+
+	const double tau = 21.0 / 3.0 *ns; //ns CR-RC3
+	//const double tau = 22.0 / 2.523 * ns; // CRRC2
+
+	bool crossed = false;
+	for (int timeSlice=m_minTime; timeSlice<m_maxTime; timeSlice++) {
+		double t = timeSlice/tau; // that's what I found in Athena SCT code
+		double Y = 0;
+		// CR-RC3 response, as in SCT
+		if (t>0) Y = depositedCharge / 27.0 * exp(3) * t*t*t * exp(-t);
+		// CR-RC2 response to step
+		//if (t>0) Y = depositedCharge / 6.0 * t*t*t * exp(-t);
+
+		if (crossed == false and Y >= getThresholdCharge()) crossed = true;
+
+		if (m_testFile) fprintf(m_testFile, "FE %d %f\n", timeSlice, Y/fC);
+		if (debug == DEBUG) {
+			if (Y>getThresholdCharge()) printf("Above threshold = %f fC\n", getThresholdCharge()/fC);
+			else printf ("Below threshold = %f fC\n", getThresholdCharge()/fC);
+		}
+	}
+
+	if( crossed ) // over threshold !
+	{
+		// Create one digit per pixel
+		AllPixITkStripsDigit * digit = new AllPixITkStripsDigit(
+				(*iCount).first.first,
+				(*iCount).first.second,
+				(*iCount).second,
+				m_primaryVertex->GetPosition());
+
+		int collectionSize = m_digitsCollection->insert(digit);
+
+		if (debug>=INFO) {
+			G4cout << " [ITkStripsDigitizer::Digitize] Total energy in strip " << digit->GetPixelIDX()
+									<< " = " << digit->GetPixelEnergyDep()/keV << " keV, counts = " <<digit->GetPixelCounts() << endl;
+			G4cout << " [ITkStripsDigitizer::Digitize] Collection size " << collectionSize << G4endl;
+		}
+	}
+	else if (debug>=INFO) G4cout << " [ITkStripsDigitizer::Digitize] No digits in strip " << (*iCount).first.first << " in this event." << G4endl;
+}
+
+
+StoreDigiCollection(m_digitsCollection);
+
+}
 
 array<double,4>  AllPixITkStripsDigitizer::RKF5IntegrationElectrons(G4double x, G4double y, G4double z,G4double dt)
 {

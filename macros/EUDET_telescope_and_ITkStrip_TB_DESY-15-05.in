@@ -172,7 +172,9 @@
 /gps/particle e-
 /gps/pos/type Beam
 /gps/pos/sigma_r 5.0 mm
-/gps/pos/centre 0 0 -1000.0 mm
+# Centre of strip 51
+/gps/pos/centre -0.036 4.0 -100.0 mm
+#/gps/pos/centre -0.075 0.0 -100.0 mm
 /gps/direction  0 0 1
 
 /gps/ene/type User

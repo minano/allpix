@@ -91,25 +91,22 @@
 
 #########################
 # Geant Particle Generator (similar to ParticleGun)
-# don't use electrons, they scatter too much
-# not suitable for precise response
-/gps/particle pi-
+# 5 +- 0.05 GeV electron
+/gps/particle e-
 /gps/pos/type Plane
 #/gps/pos/rot1 0 0 1
 #/gps/pos/rot2 1 0 0
 /gps/pos/shape Rectangle
-/gps/pos/centre 0.002 0.0 -50.0 mm
+/gps/pos/centre 0.020 0.0 -50.0 mm
 /gps/pos/halfy 0 um #14080. um
 /gps/pos/halfx 0 um #14080. um
 /gps/direction  0 0 1
-
-### Energy
 #/gps/ene/type User
 #/gps/hist/type energy
 # spectra in MeV (Geant4 default)
 /gps/ene/type Gauss
-/gps/energy 120.0 GeV
-/gps/ene/sigma 1 GeV
+/gps/ene/sigma 50 MeV
+/gps/energy 5.0 GeV
 #/gps/hist/point 2.2 1
 
 /gps/source/list

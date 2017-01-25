@@ -29,7 +29,7 @@
 /allpix/extras/setTestStructureDetLink 301
 # Mimosa detector
 /allpix/det/setId        301
-/allpix/det/setPosition   0.1 0.1 150.0 mm
+/allpix/det/setPosition   0.1 0.1 153.0 mm
 /allpix/det/setRotation   0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -55,7 +55,7 @@
 /allpix/extras/setTestStructureDetLink 303
 # Mimosa detector
 /allpix/det/setId        303
-/allpix/det/setPosition   0.3 0.3 458.0 mm
+/allpix/det/setPosition   0.3 0.3 380.0 mm
 /allpix/det/setRotation   0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -68,7 +68,7 @@
 /allpix/extras/setTestStructureDetLink 304
 # Mimosa detector
 /allpix/det/setId        304
-/allpix/det/setPosition  0.4 0.4 609.0 mm
+/allpix/det/setPosition  0.4 0.4 515 mm
 /allpix/det/setRotation  0.0 180.0 180 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -81,7 +81,7 @@
 /allpix/extras/setTestStructureDetLink 305
 # Mimosa detector
 /allpix/det/setId        305
-/allpix/det/setPosition  0.5 0.5 759.0 mm
+/allpix/det/setPosition  0.5 0.5 667.0 mm
 /allpix/det/setRotation  0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -93,7 +93,7 @@
 #### Data from gear file 
 ####################################################################
 /allpix/det/setId        8
-/allpix/det/setPosition   0.0 0.0 375.0 mm
+/allpix/det/setPosition   0.0 0.0 350.0 mm
 /allpix/det/setRotation   0.0 180.0 180.00 deg
 ####################################################################
 
@@ -130,7 +130,7 @@
 #/vis/scene/add/axes 0. 0. 0. 10. cm
 /vis/scene/add/volume World -1 2
 /vis/viewer/set/style s
-/vis/open OIX 1024x768-100+100
+#/vis/open OIX 1024x768-100+100
 #/vis/open OGLIXm 1024x768-100+100
 #/vis/open RayTracer
 #/vis/open OGLIQt
@@ -149,15 +149,15 @@
 ####################################################################
 # Draw trajectories at end of event, showing trajectory points as
 # markers of size 2 pixels
-/vis/scene/add/trajectories
-/vis/modeling/trajectories/create/drawByCharge
-/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts false
-/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
-/vis/scene/endOfEventAction accumulate
+#/vis/scene/add/trajectories
+#/vis/modeling/trajectories/create/drawByCharge
+#/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts false
+#/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+#/vis/scene/endOfEventAction accumulate
 
 # Write ROOT File
 /allpix/WriteROOTFiles/write 1
-/allpix/WriteROOTFiles/setFolderPath /home/etahirov/ITk/Allpix/allpix/root
+/allpix/WriteROOTFiles/setFolderPath /home/etahirov/allpix/allpix/root
 
 ####################################################################
 # Write Telescope files
@@ -170,12 +170,16 @@
 ####################################################################
 # Source GPS
 /gps/particle e-
+/gps/pos/type Beam
+/gps/pos/sigma_r 5.0 mm
+/gps/pos/centre 0 0 -1000.0 mm
 /gps/direction  0 0 1
-/gps/energy 4.8 GeV
-/gps/ene/sigma 100 MeV
 
-/gps/pos/type Point
-/gps/pos/centre -0.075 0.0 -100.000 mm
+/gps/ene/type User
+/gps/hist/type energy
+# spectra
+# p = 4.8 GeV/c
+/gps/hist/point 4800 1
 
 /gps/source/list
 

@@ -4,6 +4,8 @@
  *  John Idarraga <idarraga@cern.ch>
  */
 
+#include "AllPixDebug.h"
+
 #include "AllPixFEI3StandardDigitizer.hh"
 #include "AllPixTrackerHit.hh"
 #include "G4DigiManager.hh"
@@ -22,6 +24,8 @@
 
 
 using namespace TMath;
+
+extern DebugLevel debug;
 
 AllPixFEI3StandardDigitizer::AllPixFEI3StandardDigitizer(G4String modName, G4String hitsColName, G4String digitColName)
 : AllPixDigitizerInterface (modName) {
@@ -139,7 +143,7 @@ AllPixFEI3StandardDigitizer::AllPixFEI3StandardDigitizer(G4String modName, G4Str
 	//////////////////////
 
  	doTrapping =false;
- 	doFullField = true;
+ 	doFullField = false;
 
 
  	////////////////////////////////////
@@ -378,6 +382,7 @@ G4double AllPixFEI3StandardDigitizer::ComputeDriftTimeUniformField(AllPixTracker
 
 G4double AllPixFEI3StandardDigitizer::ComputeDiffusionRMS(G4double tDrift)
 {
+	if ((tDrift < 1e-4) or (tDrift > 1e15)) return 0;
 	return TMath::Sqrt(2.*Default_Electron_D*tDrift);
 
 }
@@ -613,7 +618,7 @@ void AllPixFEI3StandardDigitizer::Digitize(){
 
 	G4int dc_entries = m_digitsCollection->entries();
 	if(dc_entries > 0){
-		G4cout << "--------> Digits Collection : " << collectionName[0]
+		if (debug>ERROR) G4cout << "--------> Digits Collection : " << collectionName[0]
 		                                                             << "(" << m_hitsColName[0] << ")"
 		                                                             << " contains " << dc_entries
 		                                                             << " digits" << G4endl;

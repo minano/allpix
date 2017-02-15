@@ -247,7 +247,7 @@
 		</pixeldet>
 
 		<!-- FEI4 -->
-		<pixeldet id="200,201">
+		<pixeldet id="20,21">
 
 			<digitizer>FEI3Standard</digitizer>
 

@@ -43,6 +43,9 @@ public:
   static const double kMinEnergy;
   static const double kMaxEnergy;
 
+  // maximal number of iterations for num solving of Euler eq.
+  static const double kIterations;
+
 
   // Enums
   enum CarrierType {Electron=1, Hole=0};

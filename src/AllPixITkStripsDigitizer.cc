@@ -32,7 +32,7 @@ const double AllPixITkStripsDigitizer::k_B = 1.38064852e-23*m*m*kg/s/s;
 const double AllPixITkStripsDigitizer::kMinEnergy = 1*eV;
 const double AllPixITkStripsDigitizer::kMaxEnergy = 14*TeV;
 
-const double kIterations = 1000; // maximal number of iter for num solving of Euler eq.
+const double AllPixITkStripsDigitizer::kIterations = 1000;
 
 
 extern DebugLevel debug;
@@ -100,12 +100,12 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 	}
 
 	if (debug == DEBUG)
-		m_testFile = fopen("output/testfile.dat","w");
+		m_testFile = fopen("output/testfile.dat","w"); // FIXME try and catch
 }
 
 AllPixITkStripsDigitizer::~AllPixITkStripsDigitizer(){
 	if (debug == DEBUG)
-		fclose(m_testFile);
+		fclose(m_testFile); // FIXME try and catch
 
 }
 
@@ -291,7 +291,7 @@ array<double,4>  AllPixITkStripsDigitizer::getDriftVector(double x, double y, do
 		iter++;
 		// for debugging purposes - dots can be plotted
 		if (debug == DEBUG)
-			fprintf(m_testFile, "ixyz %d %f %f %f\n",iter, xtemp/um, ytemp/um, ztemp/um);
+			fprintf(m_testFile, "ixyz %d %f %f %f\n",iter, xtemp/um, ytemp/um, ztemp/um); // FIXME try and catch
 	}
 	if (debug == DEBUG) {
 		cout << " [AllPixITkStripDigitizer::getDriftVector] No. of iterations : " << iter << endl;
@@ -540,7 +540,7 @@ for( ; iCount != stripContent.end() ; iCount++)
 
 		if (crossed == false and Y >= getThresholdCharge()) crossed = true;
 
-		if (m_testFile) fprintf(m_testFile, "FE %d %f\n", timeSlice, Y/fC);
+		if (m_testFile) fprintf(m_testFile, "FE %d %f\n", timeSlice, Y/fC); // FIXME try and catch
 		if (debug == DEBUG) {
 			if (Y>getThresholdCharge()) printf("Above threshold = %f fC\n", getThresholdCharge()/fC);
 			else printf ("Below threshold = %f fC\n", getThresholdCharge()/fC);

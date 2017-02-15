@@ -26,7 +26,7 @@ export EUTELESCOPE=1
 echo 
 echo "To compile & install:"
 echo "cd /home/etahirov/ITk/Allpix/allpix-build"
-echo cmake "-DCMAKE_INSTALL_PREFIX=/home/etahirov/ITk/Allpix/allpix-install -D CMAKE_ECLIPSE_VERSION=\"4.4\" -G\"Eclipse CDT4 - Unix Makefiles\" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS=\"-g2\" -DCMAKE_CXX_FLAGS=\"-g2\" ../allpix
+echo cmake "-DCMAKE_INSTALL_PREFIX=/home/etahirov/ITk/Allpix/allpix-install -D CMAKE_ECLIPSE_VERSION=\"4.4\" -G\"Eclipse CDT4 - Unix Makefiles\" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS=\"-g2\" -DCMAKE_CXX_FLAGS=\"-g2\" ../allpix"
 echo
 echo "For debugging symbols add manually to CMakeFiles/allpix.dir/flags.make -g -gdwarf-2"
 echo "Or: 

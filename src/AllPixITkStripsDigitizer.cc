@@ -501,7 +501,7 @@ void AllPixITkStripsDigitizer::Digitize(){
 
 	   } // Charge sharing
 	else {
-		// No charge sharing, add this bunch to current strip
+		// No charge sharing, add this bunch to the current strip
 		stripContent[currentStrip] += eHit;
 		depositedEnergy += eHit;
 

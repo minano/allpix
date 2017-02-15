@@ -173,8 +173,9 @@
 /gps/pos/type Beam
 /gps/pos/sigma_r 5.0 mm
 # Centre of strip 51
-/gps/pos/centre -0.036 4.0 -100.0 mm
-#/gps/pos/centre -0.075 0.0 -100.0 mm
+#/gps/pos/centre -0.036 4.0 -100.0 mm
+# Edge between strips 50/51
+/gps/pos/centre -0.075 4.0 -100.0 mm
 /gps/direction  0 0 1
 
 /gps/ene/type User
@@ -200,7 +201,7 @@
 ####################################################################
 # Shoot
 #/allpix/beam/frames 100
-/allpix/beam/frames 20000
+/allpix/beam/frames 1
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
 /allpix/beam/type const 1

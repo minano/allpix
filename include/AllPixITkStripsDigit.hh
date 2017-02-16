@@ -27,16 +27,6 @@ public:
 	 */
   AllPixITkStripsDigit();
 
-  /**
-   *  Default constructor. Sets strip count to 1.
-   *
-   * @param xPixel Strip number
-   * @param yPixel Row number
-   * @param energy Deposited energy. should be ToT? FIXME
-   * @param vertex ?
-   */
-  AllPixITkStripsDigit(G4int xPixel, G4int yPixel, G4double energy, G4ThreeVector vertex);
-
   ~AllPixITkStripsDigit();
 
   /** Constructor from another digit
@@ -92,11 +82,11 @@ public:
   inline void SetPrimaryVertex(G4ThreeVector pv)  {m_primaryVertex = pv;}; // MC vertex //
   inline void IncreasePixelCounts(void)     {m_pixelCounts++;};
 
-  inline G4int GetPixelIDX() const  {return m_pixelIDX;};
-  inline G4int GetPixelIDY() const  {return m_pixelIDY;};
-  inline G4int GetPixelCounts() const {return m_pixelCounts;};
-  inline G4double GetPixelEnergyDep() const {return m_depositedEnergy;}; // MC //
-  inline G4ThreeVector GetPrimaryVertex() const {return m_primaryVertex;}; // MC //
+  inline G4int GetPixelIDX()  {return m_pixelIDX;};
+  inline G4int GetPixelIDY()  {return m_pixelIDY;};
+  inline G4int GetPixelCounts() {return m_pixelCounts;};
+  inline G4double GetPixelEnergyDep() {return m_depositedEnergy;}; // MC //
+  inline G4ThreeVector GetPrimaryVertex() {return m_primaryVertex;}; // MC //
 
 };
 

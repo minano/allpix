@@ -209,7 +209,7 @@
 ####################################################################
 # Shoot
 #/allpix/beam/frames 100
-/allpix/beam/frames 100
+/allpix/beam/frames 2
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
 /allpix/beam/type const 1

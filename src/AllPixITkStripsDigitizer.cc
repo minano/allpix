@@ -556,12 +556,12 @@ for( ; iCount != stripContent.end() ; iCount++)
 	if( crossed ) // over threshold !
 	{
 		// Create one digit per pixel
-		AllPixITkStripsDigit * digit = new AllPixITkStripsDigit(
-				(*iCount).first.first,
-				(*iCount).first.second,
-				(*iCount).second,
-				m_primaryVertex->GetPosition());
+		AllPixITkStripsDigit * digit = new AllPixITkStripsDigit;
+		digit->SetPixelIDX((*iCount).first.first);
+		digit->SetPixelIDY((*iCount).first.second);
+		digit->SetPixelCounts(1);
 		digit->SetPixelEnergyDep(stripEnergy);
+		digit->SetPrimaryVertex(m_primaryVertex->GetPosition());
 
 		m_digitsCollection->insert(digit);
 

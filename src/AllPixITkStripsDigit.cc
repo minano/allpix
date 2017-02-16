@@ -24,14 +24,6 @@ AllPixITkStripsDigit::AllPixITkStripsDigit() :
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-AllPixITkStripsDigit::AllPixITkStripsDigit(G4int xPixel, G4int yPixel, G4double energy, G4ThreeVector vertex) :
-	m_pixelIDX(xPixel),
-	m_pixelIDY(yPixel),
-	m_pixelCounts(1),
-	m_depositedEnergy(energy),
-	m_primaryVertex(vertex)
-{
-};
 
 AllPixITkStripsDigit::~AllPixITkStripsDigit()
 {;}

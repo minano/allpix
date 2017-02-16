@@ -15,7 +15,10 @@
 #include "AllPixDigitizerInterface.hh"
 // digits for this digitizer
 #include "AllPixITkStripsDigit.hh"
+#include "AllPixTrackerHit.hh"
 #include "G4PrimaryVertex.hh"
+#include "AllPixGeoDsc.hh"
+
 
 #include <map>
 #include <vector>
@@ -126,7 +129,7 @@ public:
   //! Setters
   void SetPrimaryVertex(G4PrimaryVertex * pv) {m_primaryVertex = pv;};
   void Digitize ();
-  void SetDetectorDigitInputs(G4double){};
+  void SetDetectorDigitInputs(G4double);
 
   /** Set discriminator threshold. Internally threshold is in eV
    *

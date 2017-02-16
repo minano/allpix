@@ -113,7 +113,7 @@ void AllPixEventAction::SetupDigitizers(){
 
 		// Creating an instance of the actual digitizer, and keep pointer through the interface
 		AllPixDigitizerInterface * dmPtr;
-        // __beginofdigitlist__
+		// __beginofdigitlist__
 		if (digitizerName == "FEI3Standard") {
 			AllPixFEI3StandardDigitizer * dp = new AllPixFEI3StandardDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
 			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
@@ -137,45 +137,45 @@ void AllPixEventAction::SetupDigitizers(){
 			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
 		}// Included by newdigitizer.sh script --> LETCalculator
 		else if (digitizerName == "LETCalculator") {
-					AllPixLETCalculatorDigitizer * dp = new AllPixLETCalculatorDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
-					dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
-					cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
-				}
+			AllPixLETCalculatorDigitizer * dp = new AllPixLETCalculatorDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
+			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
+			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
+		}
 		else if (digitizerName == "FEI4RadDamage") {
 			AllPixFEI4RadDamageDigitizer * dp = new AllPixFEI4RadDamageDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
 			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
 			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
 		}
- 
-// Included by newdigitizer.sh script --> Medipix3RX
-else if (digitizerName == "Medipix3RX") {
+
+		// Included by newdigitizer.sh script --> Medipix3RX
+		else if (digitizerName == "Medipix3RX") {
 			AllPixMedipix3RXDigitizer * dp = new AllPixMedipix3RXDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
 			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
 			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
 		}
- 
-// Included by newdigitizer.sh script --> EdepHistogrammer
-else if (digitizerName == "EdepHistogrammer") {
+
+		// Included by newdigitizer.sh script --> EdepHistogrammer
+		else if (digitizerName == "EdepHistogrammer") {
 			AllPixEdepHistogrammerDigitizer * dp = new AllPixEdepHistogrammerDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
 			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
 			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
 		}
- // Included by newdigitizer.sh script --> CMSp1
-else if (digitizerName == "CMSp1") {
+		// Included by newdigitizer.sh script --> CMSp1
+		else if (digitizerName == "CMSp1") {
 			AllPixCMSp1Digitizer * dp = new AllPixCMSp1Digitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
 			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
 			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
 		}
 
-// Included by newdigitizer.sh script --> ITkStrips
-else if (digitizerName == "ITkStrips") {
+		// Included by newdigitizer.sh script --> ITkStrips
+		else if (digitizerName == "ITkStrips") {
 			AllPixITkStripsDigitizer * dp = new AllPixITkStripsDigitizer(digitizerModulesNames[itr] , hcName, digitColectionName);
 			dmPtr = static_cast<AllPixDigitizerInterface *> (dp);
 			cout << "    Setting up a " << digitizerName << " digitizer for det : " << detectorId << endl;
 		}
- 
-        // __endofdigitlist__
-   	    else {
+
+		// __endofdigitlist__
+		else {
 			G4cout << "    can't find digitizer with name : " << digitizerName << G4endl;
 			exit(1);
 		}

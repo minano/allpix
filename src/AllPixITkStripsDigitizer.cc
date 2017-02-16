@@ -39,7 +39,6 @@ extern DebugLevel debug;
 
 AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hitsColName, G4String digitColName) 
 : AllPixDigitizerInterface (modName) ,
-  m_digitsCollection(0),
   m_primaryVertex(0),
   m_doFast(false),
   m_minTime(-25.0*ns),
@@ -107,6 +106,13 @@ AllPixITkStripsDigitizer::~AllPixITkStripsDigitizer(){
 	if (debug == DEBUG)
 		fclose(m_testFile); // FIXME try and catch
 
+}
+
+void AllPixITkStripsDigitizer::SetDetectorDigitInputs(G4double _thl){
+	// set digitization input values
+	// thl
+	m_inputParameter.thl = _thl; // <-- input !
+	return;
 }
 
 G4double AllPixITkStripsDigitizer::getMobility(double x, double y, double z, CarrierType carrier){
@@ -555,19 +561,26 @@ for( ; iCount != stripContent.end() ; iCount++)
 				(*iCount).first.second,
 				(*iCount).second,
 				m_primaryVertex->GetPosition());
+		digit->SetPixelEnergyDep(stripEnergy);
 
-		int collectionSize = m_digitsCollection->insert(digit);
+		m_digitsCollection->insert(digit);
 
 		if (debug>=INFO) {
 			G4cout << " [ITkStripsDigitizer::Digitize] Total energy in strip " << digit->GetPixelIDX()
 									<< " = " << digit->GetPixelEnergyDep()/keV << " keV, counts = " <<digit->GetPixelCounts() << endl;
-			G4cout << " [ITkStripsDigitizer::Digitize] Collection size " << collectionSize << G4endl;
+			//G4cout << " [ITkStripsDigitizer::Digitize] Collection size " << collectionSize << G4endl;
 		}
 	}
 	else if (debug>=INFO) G4cout << " [ITkStripsDigitizer::Digitize] No digits in strip " << (*iCount).first.first << " in this event." << G4endl;
 }
 
-
+G4int dc_entries = m_digitsCollection->entries();
+if(dc_entries > 0){
+	if (debug>ERROR) G4cout << "--------> Digits Collection : " << collectionName[0]
+	                                                             << "(" << m_hitsColName[0] << ")"
+	                                                             << " contains " << dc_entries
+	                                                             << " digits" << G4endl;
+}
 StoreDigiCollection(m_digitsCollection);
 
 }

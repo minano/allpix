@@ -10,7 +10,6 @@
 #ifndef AllPixITkStripsDigit_h
 #define AllPixITkStripsDigit_h 1
 
-
 #include "AllPixDigitInterface.hh"
 #include "G4TDigiCollection.hh"
 #include "G4Allocator.hh"

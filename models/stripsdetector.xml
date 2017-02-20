@@ -71,11 +71,11 @@
 		<pixsize_z units="um">155.0</pixsize_z>
 
 		<!-- Overall sensor active volume -->
-		<sensor_hx units="um">3910.0</sensor_hx>
+		<sensor_hx units="um">3874.0</sensor_hx>
 		<sensor_hy units="um">4070.0</sensor_hy>
 		<sensor_hz units="um">155.0</sensor_hz>
 
-		<!-- Excess size to bias ring, these are my guess -->
+		<!-- Excess size to bias ring, these are my guesses -->
 		<sensor_gr_excess_htop units="um">50.0</sensor_gr_excess_htop>
 		<sensor_gr_excess_hbottom units="um">50.0</sensor_gr_excess_hbottom>
 		<sensor_gr_excess_hright units="um">50.0</sensor_gr_excess_hright>

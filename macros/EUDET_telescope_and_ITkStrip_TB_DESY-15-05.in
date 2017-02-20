@@ -177,33 +177,22 @@
 
 ####################################################################
 # Source GPS
-/gps/particle e-
-#/gps/pos/type Point
-/gps/pos/type Plane
-/gps/pos/shape Square
-/gps/pos/halfx 0.037 mm
-/gps/pos/halfy 6 mm
-/gps/pos/centre -0.037 0.0 -100.0 mm
+/gps/particle pi-
+/gps/pos/type Point
+#/gps/pos/type Plane
+#/gps/pos/shape Square
+#/gps/pos/halfx 0.037 mm
+#/gps/pos/halfy 0.100 mm
+/gps/pos/centre -0.037 0 -100.0 mm
 /gps/direction  0 0 1
 
 /gps/ene/type User
 /gps/hist/type energy
 # spectra
-# p = 4.8 GeV/c
-/gps/hist/point 4800 1
+# momentum [MeV]
+/gps/hist/point 120000 1
 
 /gps/source/list
-
-# Source GPS
-#/gps/particle mu+
-#/gps/pos/centre 0 0 -1.0 mm
-#/gps/direction  0 0 1
-
-#/gps/ene/type User
-#/gps/hist/type energy
-# spectra
-#/gps/hist/point 200000 1
-
 
 
 ####################################################################
@@ -212,8 +201,8 @@
 #/allpix/beam/frames 50000
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
-/allpix/beam/type const 100
-#/allpix/beam/type const 1
+#/allpix/beam/type const 100
+/allpix/beam/type const 1
 /allpix/beam/on
 
 

@@ -46,13 +46,14 @@ void AllPixEventAction::SetupDigitizers(){
 	G4HCtable * HCTable = SDman->GetHCtable();
 	m_nHC = HCTable->entries();
 	map<int, AllPixGeoDsc *>::iterator geoItr;
-	G4String digitizerName;
-	G4int detectorId;
+
 
 	// loop over all hit collections and identify those which need a digitizer, i.e. only detectors
 	for(G4int itr = 0 ; itr < m_nHC ; itr++)
 	{
 
+		G4String digitizerName; // there is a bug, the name of the digtizer is used before it is set
+		G4int detectorId;
 		G4String hcName = HCTable->GetHCname(itr);
 
 		// Check if this is a Box.  If it is not a Si wafer it doesn't need to be digitized

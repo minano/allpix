@@ -33,6 +33,7 @@ const double AllPixITkStripsDigitizer::kMinEnergy = 1*eV;
 const double AllPixITkStripsDigitizer::kMaxEnergy = 14*TeV;
 
 const double AllPixITkStripsDigitizer::kIterations = 1000;
+const double AllPixITkStripsDigitizer::kMaxError = 1e-4 ;
 
 
 extern DebugLevel debug;
@@ -77,14 +78,14 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 	////////////////////////////////////
 	// Numerical integration accuracy //
 	////////////////////////////////////
-	m_maxError = 1e-4 ;
+
 	m_tStepL =  0.001*ns;
 	m_tStepU=	0.5*ns;
 	m_stepSize = m_tStepU/10.;
 
 	m_precision = 50; // Precision of charge propagation
 	if (m_precision == 1 and debug==ERROR) {
-		G4cout << " [] ERROR precision set to 1. Too low for real simulation. Exiting." << G4endl;
+		G4cout << " [AllPixITkStripDigitizer] ERROR precision set to 1. Too low for real simulation. Exiting." << G4endl;
 		exit(-1);
 	}
 
@@ -331,8 +332,8 @@ G4double  AllPixITkStripsDigitizer::setDt(G4double dt, G4double ErreurMoy)
 	//if(isnan(ErreurMoy)){Dt=tup;}
 	if (ErreurMoy != ErreurMoy)
 		Dt = m_tStepU;
-	else if (fabs(ErreurMoy) > m_maxError) { Dt*=0.9;}
-	else if (fabs(ErreurMoy) < m_maxError) { Dt*=1.1;};
+	else if (fabs(ErreurMoy) > kMaxError) { Dt*=0.9;}
+	else if (fabs(ErreurMoy) < kMaxError) { Dt*=1.1;};
 
 
 	if(Dt<m_tStepL) Dt = m_tStepL;
@@ -369,7 +370,12 @@ G4double AllPixITkStripsDigitizer::IntegrateGaussian(G4double xhit, G4double yhi
 	//G4cout << " [AllPixITkStripDigitizer::IntegrateGaussian]" << G4endl <<
 	//	TString::Format("                             xhit %f yhit %f L %f x1 %f x2 %f y1 %f y2 %f", xhit, yhit, Sigma, x1, x2, y1, y2)<< G4endl;
 
+	// Boundary checks
+	if (Energy < kMinEnergy) return 0;
 	Energy /= eV; /* convert to eV */
+
+	if (Sigma < kMaxError) return 0;
+
 	double energybis= (-TMath::Erf((x1 - xhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)));
 	energybis *=      (-TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.)*Sigma)));
 	energybis *= Energy/4.0;
@@ -489,7 +495,6 @@ void AllPixITkStripsDigitizer::Digitize(){
 				{
 				double sharedEnergy = IntegrateGaussian(hitPixelX/um, hitPixelY/um, diffusionWidth/um,
 							(m_pitchX)/um, (2*m_pitchX)/um,
-							//(-m_pitchY/2 + j*m_pitchY)/nm, (-m_pitchY/2 + (j+1)*m_pitchY)/nm, eHit);
 							(0)/um, (m_pitchY)/um, eHit);
 				stripContent[extraStrip] += sharedEnergy;
 				depositedEnergy += sharedEnergy;
@@ -521,7 +526,6 @@ void AllPixITkStripsDigitizer::Digitize(){
 				{
 					double sharedEnergy = IntegrateGaussian(hitPixelX/um, hitPixelY/um, diffusionWidth/um,
 							(- m_pitchX)/um, (0)/um,
-							//(-m_pitchY/2 + j*m_pitchY)/nm, (-m_pitchY/2 + (j+1)*m_pitchY)/nm, eHit);
 							(0)/um, (m_pitchY)/um, eHit);
 					stripContent[extraStrip] += sharedEnergy;
 					depositedEnergy += sharedEnergy;

@@ -48,6 +48,7 @@ public:
 
   // maximal number of iterations for num solving of Euler eq.
   static const double kIterations;
+  static const double kMaxError; // Numerical error; target error for RK5 iterations
 
 
   // Enums
@@ -198,7 +199,6 @@ private:
 
   double m_tStepL; //! Lower step bound for time for RK5 integration
   double m_tStepU; //! Upper step bound for time for RK5 integration
-  double m_maxError; //! target error for RK5 integration
   double m_stepSize; //! keep the initial step size for the next bunch propagation in RK5
 
   double m_minTime; //! earliest time for FE discriminator, example -25 ns

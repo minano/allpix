@@ -48,6 +48,7 @@ def parseFrameFile( inputFile ):
     sensorID = None
     telescopeData = defaultdict(list)
     DUTData       = defaultdict(list)
+    APIXData      = defaultdict(list)
 
     # read contents
     while inputFile:
@@ -74,8 +75,18 @@ def parseFrameFile( inputFile ):
 
                 telescopeTestDict[sensorID] += 1
 
-            else:
-                
+            if sensorID == '20':
+				
+                #print 20, x, y, e, d
+                APIXData[sensorID].append(x)
+                APIXData[sensorID].append(y)
+                APIXData[sensorID].append(e)
+                APIXData[sensorID].append(d)
+				
+                telescopeTestDict[sensorID] += 1
+				
+            if sensorID == '8':
+
                 DUTData[sensorID].append( x )
                 DUTData[sensorID].append( y )
                 DUTData[sensorID].append( e )
@@ -94,7 +105,7 @@ def parseFrameFile( inputFile ):
             chipName = s[22] # format: Chip_XXX
             sensorID = chipName.split('_')[-1]
 
-    return telescopeData, DUTData
+    return telescopeData, DUTData, APIXData
 
 #########################################################################################
 def convertRun( inputTarFile, outputFileName ):
@@ -167,12 +178,16 @@ def convertRun( inputTarFile, outputFileName ):
         event.parameters().setValue( 'EventType', 2 )
 
         # parse input file
-        telescopeData, DUTData = parseFrameFile( eventFile )
+        telescopeData, DUTData, APIXData = parseFrameFile( eventFile )
 
         # is there DUT data?
         containsDUT = False
         if len( DUTData ) > 0: 
-            containsDUT = True 
+            containsDUT = True
+            
+        containsAPIX = False
+        if len( APIXData ) > 0:
+			containsAPIX = True 
 
         # if first event, create additional setup collection(s)
         if iEvent == 0:
@@ -185,7 +200,7 @@ def convertRun( inputTarFile, outputFileName ):
             
             # create on setup object per Telescope plane
             for sensorID in sorted( telescopeData.iterkeys() ):
-                                    
+                print " create setup ", sensorID                    
                 setupObj = IMPL.LCGenericObjectImpl(5,0,0)
                 setupObj.setIntVal( 0, 102 )
                 setupObj.setIntVal( 1, 101 )     
@@ -195,9 +210,14 @@ def convertRun( inputTarFile, outputFileName ):
 
             # check if there is a DUT
             if containsDUT:
-
+                print " Create DUT setup"
                 DUTSetup = IMPL.LCCollectionVec( EVENT.LCIO.LCGENERICOBJECT )
                 event.addCollection ( DUTSetup, 'DUTSetup' )
+                
+            if containsAPIX:
+                print " Create APIX setup"				
+                APIXSetup = IMPL.LCCollectionVec( EVENT.LCIO.LCGENERICOBJECT )
+                event.addCollection ( APIXSetup, 'APIXSetup' )
 
         # ID encoder info
         encodingString = 'sensorID:7,sparsePixelType:5'
@@ -207,33 +227,60 @@ def convertRun( inputTarFile, outputFileName ):
         idEncoder_Telescope = UTIL.CellIDEncoder( IMPL.TrackerDataImpl )( encodingString, trackerDataColl )
 
         # check if there is a DUT
-        if containsDUT:
+        if (containsDUT and containsAPIX):
 
             # DUT data collection
             DUTDataColl = IMPL.LCCollectionVec( EVENT.LCIO.TRACKERDATA )
             idEncoder_DUT = UTIL.CellIDEncoder( IMPL.TrackerDataImpl )( encodingString, DUTDataColl )
 
             for i,sensorID in enumerate( sorted( DUTData.iterkeys() ) ):
+             if (sensorID == '8'):
+             
+                 planeData = IMPL.TrackerDataImpl()
             
-                planeData = IMPL.TrackerDataImpl()
+                 idEncoder_DUT.reset()        
+                 #idEncoder_DUT['sensorID'] = int( sensorID ) - 500 + 6 # cannot fit 500 in 5 bits!! FIXME
+                 #idEncoder_DUT['sensorID'] = 8+i # cannot fit 500 in 5 bits!! FIXME
+                 idEncoder_DUT['sensorID'] = 8
+                 idEncoder_DUT['sparsePixelType'] = 2
+                 idEncoder_DUT.setCellID( planeData )
             
-                idEncoder_DUT.reset()
-                #idEncoder_DUT['sensorID'] = int( sensorID ) - 500 + 6 # cannot fit 500 in 5 bits!! FIXME
-                idEncoder_DUT['sensorID'] = 8+i # cannot fit 500 in 5 bits!! FIXME
-                idEncoder_DUT['sparsePixelType'] = 2
-                idEncoder_DUT.setCellID( planeData )
+                 chargeVec = std.vector(float)()
+                 for val in DUTData[sensorID]:
+                     chargeVec.push_back( val )
+                     if val < 0:
+                         print 'Negative number in Event %i' % iEvent
+                    
+                 planeData.setChargeValues( chargeVec )
+
+                 DUTDataColl.addElement( planeData )
+
+             event.addCollection( DUTDataColl, 'zsdata_strip' )
+                   
+                        
+            # FEI4 data collection
+             APIXDataColl = IMPL.LCCollectionVec( EVENT.LCIO.TRACKERDATA )
+             idEncoder_APIX = UTIL.CellIDEncoder( IMPL.TrackerDataImpl ) ( encodingString, APIXDataColl )
             
-                chargeVec = std.vector(float)()
-                for val in DUTData[sensorID]:
+             if (sensorID == '20') :
+				
+                 planeData = IMPL.TrackerDataImpl()
+				
+                 idEncoder_APIX.reset()
+                 idEncoder_APIX['sensorID']= 20
+                 idEncoder_APIX['sparsePixelType'] = 3
+                 idEncoder_APIX.setCellID( planeData )
+                
+                 chargeVec = std.vector(float)()
+                 for val in APIXData[sensorID] :
                     chargeVec.push_back( val )
                     if val < 0:
                         print 'Negative number in Event %i' % iEvent
-                    
-                planeData.setChargeValues( chargeVec )
-
-                DUTDataColl.addElement( planeData )
-
-            event.addCollection( DUTDataColl, 'zsdata_strip' )
+                 planeData.setChargeValues(chargeVec )
+                
+                 APIXDataColl.addElement(planeData)
+            
+             event.addCollection( APIXDataColl, 'zsdata_apix' )
 
         # fill telescope collection
         for sensorID in sorted( telescopeData.iterkeys() ):

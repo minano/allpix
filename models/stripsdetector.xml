@@ -5,6 +5,7 @@
 <!-- 22/08/2016 DT ITkStrip ID=30, npix_x=1280, npix_y=2 -->
 <!-- 08/11/2016 DT ITkStrip now ID=10 to comply with ATLAS mini -->
 <!-- 23/11/2016 DT ITkStrip ID=8 DESY 2015/05, SS module -->
+<!-- 22/02/2017 DT Moving back to pixeldetector.xml There have been some updates, Mimosa26 dimensions were wrong.-->
 
 <detectors>
 
@@ -53,55 +54,7 @@
 		<sensor_temperature units="C">25</sensor_temperature>
 	</pixeldet>
 
-	<!-- STRIPS DETECTOR ATLAS Mini V.0 -->
-	<!-- Data from Unno NIM 765 -->
-	<!-- strip geometry using pixel digitizer -->
-	<!-- ID=10 should be for barrel DAQ load 10, DESY May 2016 (ATLAS mini sensors) -->
-	<pixeldet id="8">
-		<digitizer>ITkStrips</digitizer>
 
-		<!-- ATLAS mini sensor, BZ1-5, simplified -->
-		<npix_x>104</npix_x>
-		<npix_y>1</npix_y>
-		<npix_z>1</npix_z>
-
-		<!-- Size of one strip (half of true size, because GEANT4 likes it) -->
-		<pixsize_x units="um">37.25</pixsize_x>
-		<pixsize_y units="um">4070.0</pixsize_y>
-		<pixsize_z units="um">155.0</pixsize_z>
-
-		<!-- Overall sensor active volume -->
-		<sensor_hx units="um">3874.0</sensor_hx>
-		<sensor_hy units="um">4070.0</sensor_hy>
-		<sensor_hz units="um">155.0</sensor_hz>
-
-		<!-- Excess size to bias ring, these are my guesses -->
-		<sensor_gr_excess_htop units="um">50.0</sensor_gr_excess_htop>
-		<sensor_gr_excess_hbottom units="um">50.0</sensor_gr_excess_hbottom>
-		<sensor_gr_excess_hright units="um">50.0</sensor_gr_excess_hright>
-		<sensor_gr_excess_hleft units="um">50.0</sensor_gr_excess_hleft>
-
-		<sensor_posx units="mm">0</sensor_posx>
-		<sensor_posy units="mm">0</sensor_posy>
-		<sensor_posz units="mm">0</sensor_posz>
-
-		<!-- PCB -->
-		<pcb_hx units="um">60000.0</pcb_hx> 
-		<pcb_hy units="um">60000.0</pcb_hy> 
-		<pcb_hz units="um">500.0</pcb_hz> 
-		
-		<!--sensor_Resistivity units="">0.0</sensor_resisitivity-->
-		<!-- MIP_Tot></MIP_Tot -->
-		<!-- MIP_Charge></MIP_Charge -->
-		<!-- Counter_Depth></Counter_Depth -->
-		<!-- Clock_Unit></Clock_Unit -->
-		
-		<depletion_voltage units="V">380</depletion_voltage>
-		<bias_voltage units="V">400</bias_voltage>
-		<threshold units="fC">1.0</threshold>
-		<sensor_temperature units="C">25</sensor_temperature>
-		
-	</pixeldet> 
 	
 	<!-- STRIPS DETECTOR Long Strip V.0 -->
 	<!-- Data from Unno NIM 765 -->

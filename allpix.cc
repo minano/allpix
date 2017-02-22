@@ -127,14 +127,14 @@ int main(int argc, char** argv)
 	if (cmdOptionExists(argv, argv + argc, "--debug")) {
 		switch (std::stoi(getCmdOption(argv, argv+argc, "--debug")))
 		{
-					case 0:
-						debug = ERROR;
+					case 5:
+						debug = INFO;
 						break;
 					case 10:
 						debug = DEBUG;
 						break;
 					default:
-						debug = INFO;
+						debug = ERROR;
 		}
 
 	}

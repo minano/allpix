@@ -22,7 +22,7 @@
 /allpix/extras/setTestStructureDetLink 301
 # Mimosa detector
 /allpix/det/setId        301
-/allpix/det/setPosition   0.1 0.1 153.0 mm
+/allpix/det/setPosition   0.0 0.0 150.0 mm
 /allpix/det/setRotation   0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -35,7 +35,7 @@
 /allpix/extras/setTestStructureDetLink 302
 # Mimosa detector
 /allpix/det/setId        302
-/allpix/det/setPosition  0.2 0.2 305.0 mm
+/allpix/det/setPosition  0.0 0.0 305.0 mm
 /allpix/det/setRotation  0.0 180.0 180.00 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -48,7 +48,7 @@
 /allpix/extras/setTestStructureDetLink 303
 # Mimosa detector
 /allpix/det/setId        303
-/allpix/det/setPosition   0.3 0.3 380.0 mm
+/allpix/det/setPosition   0.0 0.0 458.0 mm
 /allpix/det/setRotation   0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -61,7 +61,7 @@
 /allpix/extras/setTestStructureDetLink 304
 # Mimosa detector
 /allpix/det/setId        304
-/allpix/det/setPosition  0.4 0.4 515 mm
+/allpix/det/setPosition  0.0 0.0 609 mm
 /allpix/det/setRotation  0.0 180.0 180 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -74,7 +74,7 @@
 /allpix/extras/setTestStructureDetLink 305
 # Mimosa detector
 /allpix/det/setId        305
-/allpix/det/setPosition  0.5 0.5 667.0 mm
+/allpix/det/setPosition  0.0 0.0 759.0 mm
 /allpix/det/setRotation  0.0 180.0 180.0 deg
 /allpix/det/setLowTHL    13. keV
 ####################################################################
@@ -84,7 +84,7 @@
 #### DUT #### 
 ####################################################################
 /allpix/det/setId        8
-/allpix/det/setPosition   0.0 0.0 350.0 mm
+/allpix/det/setPosition   0.0 0.0 375.0 mm
 /allpix/det/setRotation   0.0 180.0 180.00 deg
 ####################################################################
 
@@ -148,11 +148,11 @@
 
 ####################################################################
 # Write Telescope files
-/allpix/timepixtelescope/setFolderPath raw
+/allpix/timepixtelescope/setFolderPath raw/test
 /allpix/timepixtelescope/setEventIDcolumn 0
 /allpix/timepixtelescope/setSumTOT 1
 /allpix/timepixtelescope/write 1
-/allpix/config/setOutputPrefixWithPath root/TelescopeSim
+/allpix/config/setOutputPrefixWithPath root/TestSim
 ####################################################################
 # Source GPS
 /gps/particle pi-
@@ -160,9 +160,9 @@
 #edge between strips 50/51
 #/gps/pos/centre -0.075 4.0 -100.0 mm
 #centre of strip 51
-/gps/pos/centre -0.036 4.0 -100.0 mm
+/gps/pos/centre -0.037 0.0 -100.0 mm
 # edge between strips 51/52
-#/gps/pos/centre 0.0 4.0 -100.0 mm
+#/gps/pos/centre 0.0 0.0 -100.0 mm
 /gps/direction  0 0 1
 
 /gps/ene/type User
@@ -187,7 +187,6 @@
 ####################################################################
 # Shoot
 /allpix/beam/frames 1
-#/allpix/beam/type const 50
 /allpix/beam/type const 1
 /allpix/beam/on
 

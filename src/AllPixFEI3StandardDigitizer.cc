@@ -401,6 +401,8 @@ G4double AllPixFEI3StandardDigitizer::IntegrateGaussian(G4double xhit,G4double y
 {
 	//G4cout << TString::Format("Integration borns x1=%f x2=%f y1=%f y2=%f",x1/um,x2/um,y1/um,y2/um) << endl;
 	//G4cout << TString::Format("TMath::Erf test %f %f %f %f",TMath::Erf((x1 - xhit)/(Sqrt(2.)*Sigma)),TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)),TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.)*Sigma)))<< endl;
+	if (Sigma < 1e-4) return 0.0;
+	
 	return (Energy*(-TMath::Erf((x1 - xhit)/(Sqrt(2.)*Sigma)) + TMath::Erf((x2 - xhit)/(TMath::Sqrt(2.)*Sigma)))
 			*(-TMath::Erf((y1 - yhit)/(TMath::Sqrt(2.)*Sigma)) + TMath::Erf((y2 - yhit)/(TMath::Sqrt(2.0)*Sigma))))/4.;
 }

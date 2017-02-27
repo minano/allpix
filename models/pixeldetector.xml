@@ -102,7 +102,7 @@
 </pixeldet>
 
 <!-- FEI4 -->
-<pixeldet id="200,201">
+<pixeldet id="20,21">
 
 <digitizer>FEI3Standard</digitizer>
 
@@ -1568,7 +1568,7 @@
 
 		<!-- ATLAS mini sensor, BZ1-5, simplified -->
 		<npix_x>104</npix_x>
-		<npix_y>0</npix_y>
+		<npix_y>1</npix_y>
 		<npix_z>0</npix_z>
 
 		<!-- Size of one strip (half of true size, because GEANT4 likes it) -->

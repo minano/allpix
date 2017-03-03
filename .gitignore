@@ -1,0 +1,3 @@
+# Ignoring everything, just keep directory
+*.tar.gz
+*.root

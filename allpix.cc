@@ -262,6 +262,10 @@ int main(int argc, char** argv)
 		session->SessionStart();
 		delete session;
 	}
+	
+	time_t simulationTime;
+	time(&simulationTime);
+	G4cout << " [INFO] Time to simulate " << simulationTime - rawtime << " s." << G4endl;
 
 #ifdef G4VIS_USE
 	delete visManager;

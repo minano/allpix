@@ -182,11 +182,12 @@ G4double AllPixITkStripsDigitizer::GetMeanFreePath(G4double driftVelocity, G4boo
 
 double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 
-	if (z<-m_detectorWidth/2. or z>m_detectorWidth/2.) {
+	if (z<-kMaxError or z>(m_detectorWidth+kMaxError) ) {
 		if (debug==DEBUG) {
 			G4cout << TString::Format(" [ITkStripDigitizer::EField1D] E = 0 V/cm") << G4endl;
-			cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip." << endl;
+			
 		}
+		G4cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip: " << z/um << G4endl;
 		return 0.0;
 	}
 	//if(readoutType==ELECTRON)
@@ -226,12 +227,13 @@ G4double AllPixITkStripsDigitizer::getDriftTime(G4double z, CarrierType carrier,
 		if (_E != 0) {
 			if (debug==DEBUG) G4cout << " [ComputeDriftTime] Fast ballistic calculation of drift time." << endl;
 			// tz is transformation vector to c.s. I quadrant
-			double tz = z + m_detectorWidth/2.;
+			//double tz = z + m_detectorWidth/2.;
 			// w is the traversed path by electron
-			double w = m_detectorWidth - tz;
+			//double w = m_detectorWidth - tz;
+			double w = m_detectorWidth - z;
 			if (debug == DEBUG) G4cout<< TString::Format(" [ComputeDriftTime] Traversed path by electron %f um\n", w/um);
 
-			if (w > 1E-6) // FIXME hardcoded precision
+			if (w > kMaxError) 
 				drift = w / (GetDriftVelocity(0, 0, z, carrier));
 			else
 				drift = 0.0*ns;
@@ -268,7 +270,7 @@ array<double,4>  AllPixITkStripsDigitizer::getDriftVector(double x, double y, do
 	if (debug>INFO) cout << " [AllPixITkStripDigitizer::getDriftVector]" << endl;
 
 	int iter =0;
-	while( ztemp>-m_detectorWidth/2.0 && ztemp<m_detectorWidth/2.0 && iter<kIterations){
+	while( ztemp>0 && ztemp<m_detectorWidth && iter<kIterations){
 
 		driftTime+=dt;
 
@@ -292,8 +294,8 @@ array<double,4>  AllPixITkStripsDigitizer::getDriftVector(double x, double y, do
 
 		// Check the boundaries
 		//if( getENorm(ztemp)==0 ) ztemp = m_detectorWidth/2.0;
-		if (ztemp < -m_detectorWidth/2.0) ztemp = -m_detectorWidth/2.0;
-		if (ztemp > m_detectorWidth/2.0) ztemp = m_detectorWidth/2.0;
+		if (ztemp < 0) ztemp = 0.0;
+		if (ztemp > m_detectorWidth) ztemp = m_detectorWidth;
 
 		// Adaptable step size
 		dt=setDt(dt, step.at(3));

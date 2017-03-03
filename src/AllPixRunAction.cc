@@ -193,7 +193,7 @@ void AllPixRunAction::EndOfRunAction(const G4Run* aRun)
       m_AllPixRun->FillROOTFiles(writeROOTFile);
     }
   timer->Stop();
-  if (debug>=INFO) G4cout << "event Id = " << aRun->GetNumberOfEvent()
+  if (debug>ERROR) G4cout << "event Id = " << aRun->GetNumberOfEvent()
 	 << " " << *timer << G4endl;    
      
 

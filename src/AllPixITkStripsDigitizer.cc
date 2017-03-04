@@ -183,13 +183,16 @@ G4double AllPixITkStripsDigitizer::GetMeanFreePath(G4double driftVelocity, G4boo
 double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 
 	if (z<-kMaxError or z>(m_detectorWidth+kMaxError) ) {
+
 		if (debug==DEBUG) {
 			G4cout << TString::Format(" [ITkStripDigitizer::EField1D] E = 0 V/cm") << G4endl;
-			
+			G4cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip: " << z/um << G4endl;
 		}
-		G4cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip: " << z/um << G4endl;
+
 		return 0.0;
+
 	}
+
 	//if(readoutType==ELECTRON)
 	//{
 	//double electricFieldX = 0.0;
@@ -270,7 +273,7 @@ array<double,4>  AllPixITkStripsDigitizer::getDriftVector(double x, double y, do
 	if (debug>INFO) cout << " [AllPixITkStripDigitizer::getDriftVector]" << endl;
 
 	int iter =0;
-	while( ztemp>0 && ztemp<m_detectorWidth && iter<kIterations){
+	while( ztemp>kMaxError and ztemp<(m_detectorWidth-kMaxError) and iter<kIterations){
 
 		driftTime+=dt;
 
@@ -576,7 +579,7 @@ for( ; iCount != stripContent.end() ; iCount++)
 		// CR-RC2 response to step
 		//if (t>0) Y = depositedCharge / 6.0 * t*t*t * exp(-t);
 
-		if (crossed == false and Y >= getThresholdCharge()) crossed = true;
+		if (crossed == false and Y >= getThresholdCharge() and timeSlice < 25) crossed = true; // FIXME hardcoded timebin
 
 		if (m_testFile) fprintf(m_testFile, "FE %d %f\n", timeSlice, Y/fC); // FIXME try and catch
 		if (debug == DEBUG) {

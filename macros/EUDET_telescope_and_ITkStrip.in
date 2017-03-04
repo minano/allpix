@@ -159,10 +159,10 @@
 /gps/pos/type Point
 #edge between strips 50/51
 #/gps/pos/centre -0.075 4.0 -100.0 mm
-#centre of strip 51
+#edge of strip 0/1
+#/gps/pos/centre -3.795 0.0 -100.0 mm
+# centre of 51
 /gps/pos/centre -0.037 0.0 -100.0 mm
-# edge between strips 51/52
-#/gps/pos/centre 0.0 0.0 -100.0 mm
 /gps/direction  0 0 1
 
 /gps/ene/type User

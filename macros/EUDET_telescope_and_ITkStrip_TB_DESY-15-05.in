@@ -177,7 +177,7 @@
 
 ####################################################################
 # Source GPS
-/gps/particle pi-
+/gps/particle e-
 /gps/pos/type Point
 #/gps/pos/type Plane
 #/gps/pos/shape Square
@@ -190,15 +190,15 @@
 /gps/hist/type energy
 # spectra
 # momentum [MeV]
-/gps/hist/point 120000 1
+/gps/hist/point 4800 1
 
 /gps/source/list
 
 
 ####################################################################
 # Shoot
-/allpix/beam/frames 1
-#/allpix/beam/frames 50000
+#/allpix/beam/frames 100
+/allpix/beam/frames 50000
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
 #/allpix/beam/type const 100

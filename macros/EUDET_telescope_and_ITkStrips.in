@@ -165,7 +165,7 @@
 
 # Write ROOT File
 /allpix/WriteROOTFiles/write 1
-/allpix/WriteROOTFiles/setFolderPath $HOME/ITk/AllPix/allpix/root
+/allpix/WriteROOTFiles/setFolderPath $HOME/ITk/Allpix/allpix/root
 
 ####################################################################
 # Write Telescope files

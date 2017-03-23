@@ -85,7 +85,7 @@ def parseFrameFile( inputFile ):
 				
                 telescopeTestDict[sensorID] += 1
 				
-            if sensorID == '8':
+            if sensorID == '100008':
 
                 DUTData[sensorID].append( x )
                 DUTData[sensorID].append( y )
@@ -227,14 +227,14 @@ def convertRun( inputTarFile, outputFileName ):
         idEncoder_Telescope = UTIL.CellIDEncoder( IMPL.TrackerDataImpl )( encodingString, trackerDataColl )
 
         # check if there is a DUT
-        if (containsDUT and containsAPIX):
+        if (containsDUT):
 
             # DUT data collection
             DUTDataColl = IMPL.LCCollectionVec( EVENT.LCIO.TRACKERDATA )
             idEncoder_DUT = UTIL.CellIDEncoder( IMPL.TrackerDataImpl )( encodingString, DUTDataColl )
 
             for i,sensorID in enumerate( sorted( DUTData.iterkeys() ) ):
-             if (sensorID == '8'):
+              if (sensorID == '100008'):
              
                  planeData = IMPL.TrackerDataImpl()
             
@@ -255,9 +255,9 @@ def convertRun( inputTarFile, outputFileName ):
 
                  DUTDataColl.addElement( planeData )
 
-             event.addCollection( DUTDataColl, 'zsdata_strip' )
+            event.addCollection( DUTDataColl, 'zsdata_strip' )
                    
-                        
+        if (containsAPIX):       
             # FEI4 data collection
              APIXDataColl = IMPL.LCCollectionVec( EVENT.LCIO.TRACKERDATA )
              idEncoder_APIX = UTIL.CellIDEncoder( IMPL.TrackerDataImpl ) ( encodingString, APIXDataColl )

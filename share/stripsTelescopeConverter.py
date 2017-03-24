@@ -31,7 +31,9 @@ print sys.argv[3:]
 mySensorIDlist = sys.argv[3:]
 for mySensorID in mySensorIDlist:
     telescopeTestDict[mySensorID] = 0
-
+    
+stringDUTID='100008'
+stringAPIXID='200'
 #########################################################################################
 def parseFrameFile( inputFile ):
 
@@ -67,16 +69,17 @@ def parseFrameFile( inputFile ):
             d = int('0')
 
             if sensorID[0] == '3':
+                #print 'Creating collection ', sensorID
 
                 telescopeData[sensorID].append( x )
                 telescopeData[sensorID].append( y )
                 telescopeData[sensorID].append( e )
                 telescopeData[sensorID].append( d )
-
+                
                 telescopeTestDict[sensorID] += 1
 
-            if sensorID == '20':
-				
+            if sensorID == stringAPIXID:
+                #print 'Creating collection ', sensorID
                 #print 20, x, y, e, d
                 APIXData[sensorID].append(x)
                 APIXData[sensorID].append(y)
@@ -85,13 +88,14 @@ def parseFrameFile( inputFile ):
 				
                 telescopeTestDict[sensorID] += 1
 				
-            if sensorID == '100008':
-
+            if sensorID == stringDUTID:
+                #print 'Creating collection ', sensorID
+				
                 DUTData[sensorID].append( x )
                 DUTData[sensorID].append( y )
                 DUTData[sensorID].append( e )
                 DUTData[sensorID].append( d )
-
+                
                 telescopeTestDict[sensorID] += 1
 
         else:
@@ -126,6 +130,7 @@ def convertRun( inputTarFile, outputFileName ):
 
     # get run number from first file (same for the rest) assuming filename is this form: mpx-YYMMDD-HHmmSS-RUN_FRAME.txt
     runNumber = int( inputFiles[0].name.split('-')[-1].split('_')[0] )
+    runNumber = int( inputTarFile.split('n')[-1].split('.')[0] )
     #runNumber = 999999
 
     # define detector name
@@ -165,7 +170,14 @@ def convertRun( inputTarFile, outputFileName ):
         NEVENTS += 1
 
         # get event number from file name ( i.e. frame ID ) assuming file name format above
-        iEvent = int( eventFile.name.split('_')[-1].split('.')[0] )
+        try:
+            iEvent = int( eventFile.name.split('_')[-1].split('.')[0] )
+        except ValueError:
+            print 'Exception after ', NEVENTS, ' events.'
+            print eventFile.name
+            print 'Continuing to next event.'
+            continue
+			
         if ( NEVENTS%1000 == 0 ):
             print 'Events processed: %i ...' % NEVENTS
 
@@ -234,14 +246,14 @@ def convertRun( inputTarFile, outputFileName ):
             idEncoder_DUT = UTIL.CellIDEncoder( IMPL.TrackerDataImpl )( encodingString, DUTDataColl )
 
             for i,sensorID in enumerate( sorted( DUTData.iterkeys() ) ):
-              if (sensorID == '100008'):
+              if (sensorID == stringDUTID):
              
                  planeData = IMPL.TrackerDataImpl()
             
                  idEncoder_DUT.reset()        
                  #idEncoder_DUT['sensorID'] = int( sensorID ) - 500 + 6 # cannot fit 500 in 5 bits!! FIXME
                  #idEncoder_DUT['sensorID'] = 8+i # cannot fit 500 in 5 bits!! FIXME
-                 idEncoder_DUT['sensorID'] = 8
+                 idEncoder_DUT['sensorID'] = int(sensorID) - 100000
                  idEncoder_DUT['sparsePixelType'] = 2
                  idEncoder_DUT.setCellID( planeData )
             
@@ -261,8 +273,8 @@ def convertRun( inputTarFile, outputFileName ):
             # FEI4 data collection
              APIXDataColl = IMPL.LCCollectionVec( EVENT.LCIO.TRACKERDATA )
              idEncoder_APIX = UTIL.CellIDEncoder( IMPL.TrackerDataImpl ) ( encodingString, APIXDataColl )
-            
-             if (sensorID == '20') :
+             for i,sensorID in enumerate( sorted( DUTData.iterkeys() ) ):
+               if (sensorID == stringAPIXID) :
 				
                  planeData = IMPL.TrackerDataImpl()
 				

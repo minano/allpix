@@ -10,7 +10,7 @@
 #### DESY May 2015
 #### Data from run log 
 ####################################################################
-/allpix/det/setId        8
+/allpix/det/setId        100008
 /allpix/det/setPosition   0.0 0.0 375 mm
 /allpix/det/setRotation   0.0 180.0 180.00 deg
 ####################################################################
@@ -103,7 +103,7 @@
 #### FEI4
 
 ####################################################################
-/allpix/det/setId        20
+/allpix/det/setId        200
 /allpix/det/setPosition  0.0 0.0 750 mm
 /allpix/det/setRotation  0.0 180.0 180.0 deg
 
@@ -165,7 +165,7 @@
 
 # Write ROOT File
 /allpix/WriteROOTFiles/write 1
-/allpix/WriteROOTFiles/setFolderPath /home/etahirov/allpix/allpix/root
+/allpix/WriteROOTFiles/setFolderPath $HOME/ITk/Allpix/allpix/root
 
 ####################################################################
 # Write Telescope files
@@ -204,5 +204,3 @@
 #/allpix/beam/type const 100
 /allpix/beam/type const 1
 /allpix/beam/on
-
-

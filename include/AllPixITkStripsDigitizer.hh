@@ -10,15 +10,12 @@
 #ifndef AllPixITkStripsDigitizer_h
 #define AllPixITkStripsDigitizer_h 1
 
-
 // allpix Interface
 #include "AllPixDigitizerInterface.hh"
 // digits for this digitizer
 #include "AllPixITkStripsDigit.hh"
-#include "AllPixTrackerHit.hh"
 #include "G4PrimaryVertex.hh"
 #include "AllPixGeoDsc.hh"
-
 
 #include <map>
 #include <vector>
@@ -27,15 +24,24 @@
 using namespace std;
 
 /**
- *  Digitizer AllPixITkStrip implementation
+ *  Digitizer AllPixITkStrips implementation
  */
 class AllPixITkStripsDigitizer : public  AllPixDigitizerInterface {
 
 public:
 
-  //! Constructors
   AllPixITkStripsDigitizer(G4String, G4String, G4String);
   virtual ~AllPixITkStripsDigitizer();
+
+  void SetPrimaryVertex(G4PrimaryVertex * pv) {m_primaryVertex = pv;};
+  //void Digitize ();
+  void SetDetectorDigitInputs(G4double){};
+  
+  // ITkStrips
+  
+    //! Constructors
+  //AllPixITkStripsDigitizer(G4String, G4String, G4String);
+  //virtual ~AllPixITkStripsDigitizer();
 
   //! Constants
   static const double kPairEnergy; // in eV
@@ -128,9 +134,9 @@ public:
   inline int getThresholdPairs() {return m_inputParameter.thl/kPairEnergy;}
 
   //! Setters
-  void SetPrimaryVertex(G4PrimaryVertex * pv) {m_primaryVertex = pv;};
+  //void SetPrimaryVertex(G4PrimaryVertex * pv) {m_primaryVertex = pv;};
   void Digitize ();
-  void SetDetectorDigitInputs(G4double);
+  //void SetDetectorDigitInputs(G4double){};
 
   /** Set discriminator threshold. Internally threshold is in eV
    *
@@ -165,6 +171,14 @@ public:
 
 private:
 
+  // digitInput typedef is defined in AllPixDigitizerInterface.hh
+  //digitInput m_digitIn;
+
+  //AllPixITkStripsDigitsCollection * m_digitsCollection;
+  //vector<G4String> m_hitsColName;
+  //G4PrimaryVertex * m_primaryVertex; // information from EventAction
+
+// ITk strips
   // digitInput typedef is defined in AllPixDigitizerInterface.hh
   digitInput m_inputParameter; //! Very efficient struct that has only one field; .thl energy in eV
 
@@ -205,6 +219,6 @@ private:
   double m_maxTime; //! latest time for FE discr., example 75 ns
 
   FILE* m_testFile; //! output of debugging information for plotting
-
 };
+
 #endif

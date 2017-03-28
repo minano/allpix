@@ -115,13 +115,6 @@ AllPixITkStripsDigitizer::~AllPixITkStripsDigitizer(){
 
 }
 
-void AllPixITkStripsDigitizer::SetDetectorDigitInputs(G4double _thl){
-	// set digitization input values
-	// thl
-	m_inputParameter.thl = _thl; // <-- input !
-	return;
-}
-
 G4double AllPixITkStripsDigitizer::getMobility(double x, double y, double z, CarrierType carrier){
 
 	// Initialize variables so they have the right scope

@@ -109,7 +109,7 @@ G4Run * AllPixRunAction::GenerateRun(){
       writeROOTFile=new AllPixWriteROOTFile* [(int)geoMap->size()];
       for( detItr = geoMap->begin() ; detItr != geoMap->end() ; detItr++)
 	{
-	  G4cout << "nalipour ******" << (*detItr).first << G4endl;
+	  //G4cout << "nalipour ******" << (*detItr).first << G4endl;
 	  writeROOTFile[m_AllPixRun->return_detIdToIndex((*detItr).first)]=new AllPixWriteROOTFile((*detItr).first, AllPixMessenger->GetWrite_MC_FolderName());
 	}
     }
@@ -212,6 +212,7 @@ void AllPixRunAction::initWriters(){
 #ifdef HAVE_LCIO
   if(m_writeEUTelescopeFilesFlag){
     lcio = new AllPixLCIOwriter();
+    lcio->SetWriteEventID(AllPixMessenger->GetEUTelescopeEventIDFlag());       
     writerList.push_back(lcio);
   }
 #endif

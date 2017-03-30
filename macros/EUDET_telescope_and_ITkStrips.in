@@ -177,12 +177,13 @@
 
 ####################################################################
 # Source GPS
-/gps/particle pi-
+/gps/particle e-
 /gps/pos/type Point
 #/gps/pos/type Plane
 #/gps/pos/shape Square
 #/gps/pos/halfx 0.037 mm
 #/gps/pos/halfy 0.100 mm
+# Centre of strip 51
 /gps/pos/centre -0.037 0 -100.0 mm
 /gps/direction  0 0 1
 
@@ -190,7 +191,7 @@
 /gps/hist/type energy
 # spectra
 # momentum [MeV]
-/gps/hist/point 120000 1
+/gps/hist/point 4800 1
 
 /gps/source/list
 

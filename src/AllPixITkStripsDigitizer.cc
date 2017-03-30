@@ -83,7 +83,8 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 	m_tStepU=	0.5*ns;
 	m_stepSize = m_tStepU/10.;
 
-	m_precision = 50; // Precision of charge propagation
+	//m_precision = 50; // Precision of charge propagation
+	m_precision = 10;
 	if (m_precision == 1 and debug==ERROR) {
 		G4cout << " [AllPixITkStripDigitizer] ERROR precision set to 1. Too low for real simulation. Exiting." << G4endl;
 		exit(-1);

@@ -178,6 +178,7 @@
 ####################################################################
 # Source GPS
 /gps/particle e-
+<<<<<<< HEAD
 /gps/pos/type Point
 #/gps/pos/type Plane
 #/gps/pos/shape Square
@@ -198,8 +199,8 @@
 
 ####################################################################
 # Shoot
-/allpix/beam/frames 1
-#/allpix/beam/frames 50000
+#/allpix/beam/frames 1
+/allpix/beam/frames 250000
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
 #/allpix/beam/type const 100

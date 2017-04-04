@@ -178,7 +178,6 @@
 ####################################################################
 # Source GPS
 /gps/particle e-
-<<<<<<< HEAD
 /gps/pos/type Point
 #/gps/pos/type Plane
 #/gps/pos/shape Square

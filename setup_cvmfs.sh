@@ -35,4 +35,4 @@ echo "make -jN"
 echo "make install"
 
 echo "For EUTelescope conversion"
-echo "... unfinished"
+echo "... unfinished with cvmfs only, use share/setup_pyLCIO.py (uses afs)."

@@ -273,7 +273,7 @@ def convertRun( inputTarFile, outputFileName ):
             # FEI4 data collection
              APIXDataColl = IMPL.LCCollectionVec( EVENT.LCIO.TRACKERDATA )
              idEncoder_APIX = UTIL.CellIDEncoder( IMPL.TrackerDataImpl ) ( encodingString, APIXDataColl )
-             for i,sensorID in enumerate( sorted( DUTData.iterkeys() ) ):
+             for i,sensorID in enumerate( sorted( APIXData.iterkeys() ) ):
                if (sensorID == stringAPIXID) :
 				
                  planeData = IMPL.TrackerDataImpl()

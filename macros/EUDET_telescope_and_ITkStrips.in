@@ -164,7 +164,7 @@
 /vis/scene/endOfEventAction accumulate
 
 # Write ROOT File
-/allpix/WriteROOTFiles/write 1
+/allpix/WriteROOTFiles/write 0
 /allpix/WriteROOTFiles/setFolderPath $HOME/ITk/Allpix/allpix/root
 
 ####################################################################
@@ -178,14 +178,13 @@
 ####################################################################
 # Source GPS
 /gps/particle e-
-<<<<<<< HEAD
 /gps/pos/type Point
 #/gps/pos/type Plane
 #/gps/pos/shape Square
 #/gps/pos/halfx 0.037 mm
 #/gps/pos/halfy 0.100 mm
 # Centre of strip 51
-/gps/pos/centre -0.037 0 -100.0 mm
+/gps/pos/centre 0 0 -100.0 mm
 /gps/direction  0 0 1
 
 /gps/ene/type User

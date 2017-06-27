@@ -530,13 +530,13 @@ void AllPixDetectorConstruction::BuildPixelDevices(map<int, AllPixGeoDsc *> geoM
         // replicated solids (same object/names everywhere)
         G4Box * Box_slice = new G4Box(SliceName.first,
                                       geoMap[*detItr]->GetHalfPixelX(),
-                geoMap[*detItr]->GetHalfSensorY(),
-                geoMap[*detItr]->GetHalfSensorZ());
+                                      geoMap[*detItr]->GetHalfSensorY(),
+                                      geoMap[*detItr]->GetHalfSensorZ());
 
         G4Box * Box_pixel = new G4Box(PixelName.first,
                                       geoMap[*detItr]->GetHalfPixelX(),
-                geoMap[*detItr]->GetHalfPixelY(),
-                geoMap[*detItr]->GetHalfPixelZ());
+                                      geoMap[*detItr]->GetHalfPixelY(),
+                                      geoMap[*detItr]->GetHalfPixelZ());
 
         //Bump itself
         G4UnionSolid * aBump = 0;

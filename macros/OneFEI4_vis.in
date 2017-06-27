@@ -19,7 +19,7 @@
 
 ####################################################################
 # prefix for output filename (string) Don't use quotation marks \"
-/allpix/config/setOutputPrefixWithPath test
+/allpix/config/setOutputPrefixWithPath testFEI4
 
 
 ####################################################################
@@ -90,7 +90,7 @@
 
 ####################################################################
 # Shoot
-/allpix/beam/frames 1000
+/allpix/beam/frames 10
 /allpix/beam/type const 1
 /allpix/beam/on
 

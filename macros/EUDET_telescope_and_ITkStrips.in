@@ -178,12 +178,11 @@
 ####################################################################
 # Source GPS
 /gps/particle e-
-/gps/pos/type Point
-#/gps/pos/type Plane
-#/gps/pos/shape Square
-#/gps/pos/halfx 0.037 mm
-#/gps/pos/halfy 0.100 mm
-# Centre of strip 51
+#/gps/pos/type Point
+/gps/pos/type Plane
+/gps/pos/shape Square
+/gps/pos/halfx 5.0 mm
+/gps/pos/halfy 5.0 mm
 /gps/pos/centre 0 0 -100.0 mm
 /gps/direction  0 0 1
 
@@ -199,7 +198,7 @@
 ####################################################################
 # Shoot
 #/allpix/beam/frames 1
-/allpix/beam/frames 250000
+/allpix/beam/frames 100000
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
 #/allpix/beam/type const 100

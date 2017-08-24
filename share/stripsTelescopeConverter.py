@@ -280,7 +280,7 @@ def convertRun( inputTarFile, outputFileName ):
 				
                  idEncoder_APIX.reset()
                  idEncoder_APIX['sensorID']= 20
-                 idEncoder_APIX['sparsePixelType'] = 3
+                 idEncoder_APIX['sparsePixelType'] = 2
                  idEncoder_APIX.setCellID( planeData )
                 
                  chargeVec = std.vector(float)()

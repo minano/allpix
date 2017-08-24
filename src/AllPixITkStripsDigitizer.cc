@@ -43,7 +43,7 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
   m_primaryVertex(0),
   m_doFast(false),
   m_minTime(-25.0*ns),
-  m_maxTime(150.0*ns)
+  m_maxTime(50.0*ns)
 {
 
 	// Registration of digits collection name
@@ -582,13 +582,11 @@ for( ; iCount != stripContent.end() ; iCount++)
 		}
 	}
 
-	if( crossed ) // over threshold !
-	{
 		// Create one digit per pixel
 		AllPixITkStripsDigit * digit = new AllPixITkStripsDigit;
 		digit->SetPixelIDX((*iCount).first.first);
 		digit->SetPixelIDY((*iCount).first.second);
-		digit->SetPixelCounts(1); // Binary readout, no ToT
+		digit->SetPixelCounts(crossed ? 1 : 0); // Binary readout, no ToT
 		digit->SetPixelEnergyDep(stripEnergy);
 		digit->SetPrimaryVertex(m_primaryVertex->GetPosition());
 
@@ -599,8 +597,6 @@ for( ; iCount != stripContent.end() ; iCount++)
 									<< " = " << digit->GetPixelEnergyDep()/keV << " keV, counts = " <<digit->GetPixelCounts() << endl;
 			//G4cout << " [ITkStripsDigitizer::Digitize] Collection size " << collectionSize << G4endl;
 		}
-	}
-	else if (debug>=INFO) G4cout << " [ITkStripsDigitizer::Digitize] No digits in strip " << (*iCount).first.first << " in this event." << G4endl;
 }
 
 G4int dc_entries = m_digitsCollection->entries();

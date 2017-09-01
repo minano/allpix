@@ -124,7 +124,7 @@ def convertRun( inputTarFile, outputFileName ):
     for member in tar:
         if (count>1):
             inputFiles.append( tar.extractfile(member) )
-            print "tar string: ", member
+            if (not (count%100)) : print "tar string: ", member
         count = (count+1)
         
 

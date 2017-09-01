@@ -29,7 +29,7 @@ const double AllPixITkStripsDigitizer::fC = CLHEP::coulomb*1e-15;
 const double AllPixITkStripsDigitizer::SiPermittivity = 11.8*8.854187817e-12/m;
 const double AllPixITkStripsDigitizer::k_B = 1.38064852e-23*m*m*kg/s/s;
 
-const double AllPixITkStripsDigitizer::kMinEnergy = 1*eV;
+const double AllPixITkStripsDigitizer::kMinEnergy = 0.1*eV;
 const double AllPixITkStripsDigitizer::kMaxEnergy = 14*TeV;
 
 const double AllPixITkStripsDigitizer::kIterations = 1000;
@@ -467,7 +467,7 @@ void AllPixITkStripsDigitizer::Digitize(){
 			if (debug==DEBUG) {
 				G4cout << " [ITkStripDigitizer::Digitize] Bunch " << nQ <<" dE [eV]   = " << eHit/eV << G4endl;
 			}
-			if (eHit/eV < kMinEnergy) continue;
+			if (eHit/eV < kMinEnergy) eHit=0;
 
 			const double driftTime = getDriftTime(hitPixelZ, Electron, m_doFast);
 
@@ -500,8 +500,10 @@ void AllPixITkStripsDigitizer::Digitize(){
 
 				if (debug>=INFO) G4cout << TString::Format(" [ITkStripDigitizer::Digitize] Shared into strip %d Bunch %d Shared energy: %f eV\n", extraStrip.first, nQ, stripContent[extraStrip]/eV);
 			}
-				else
+				else {
+					//stripContent[extraStrip] = 0; // I think this causes to have strips with negative index
 					G4cout<<" [] Charge loss at the edge of sensor."<<G4endl;
+				}
 			}
 
 			else if (hitPixelX - diffusionWidth < 0.0) {
@@ -531,8 +533,10 @@ void AllPixITkStripsDigitizer::Digitize(){
 
 					if (debug>=INFO) G4cout << TString::Format(" [ITkStripDigitizer::Digitize] Share into strip %d Bunch %d Shared energy: %f eV\n", extraStrip.first, nQ, stripContent[extraStrip]/eV);
 				}
-				else
+				else {
+					//stripContent[extraStrip] = 0; // Strip with negative index?
 					G4cout<<" [] Charge loss at the edge of sensor."<<G4endl;
+				}
 
 	   } // Charge sharing
 	else {
@@ -573,24 +577,24 @@ for( ; iCount != stripContent.end() ; iCount++)
 		// CR-RC2 response to step
 		//if (t>0) Y = depositedCharge / 6.0 * t*t*t * exp(-t);
 
-		if (crossed == false and Y >= getThresholdCharge() and timeSlice < 25) crossed = true; // FIXME hardcoded timebin
+		if (crossed == false and Y >= getThresholdCharge() and timeSlice < 50) crossed = true; // FIXME hardcoded timebin
 
-		if (m_testFile) fprintf(m_testFile, "FE %d %f\n", timeSlice, Y/fC); // FIXME try and catch
+		if (m_testFile) fprintf(m_testFile, "FE %d %f\n", timeSlice, Y/fC);
 		if (debug == DEBUG) {
 			if (Y>getThresholdCharge()) printf("Above threshold = %f fC\n", getThresholdCharge()/fC);
 			else printf ("Below threshold = %f fC\n", getThresholdCharge()/fC);
 		}
 	}
 
-		// Create one digit per pixel
-		AllPixITkStripsDigit * digit = new AllPixITkStripsDigit;
-		digit->SetPixelIDX((*iCount).first.first);
-		digit->SetPixelIDY((*iCount).first.second);
-		digit->SetPixelCounts(crossed ? 1 : 0); // Binary readout, no ToT
-		digit->SetPixelEnergyDep(stripEnergy);
-		digit->SetPrimaryVertex(m_primaryVertex->GetPosition());
+	// Create one digit per pixel
+	AllPixITkStripsDigit * digit = new AllPixITkStripsDigit;
+	digit->SetPixelIDX((*iCount).first.first);
+	digit->SetPixelIDY((*iCount).first.second);
+	digit->SetPixelCounts(crossed ? 1 : 0); // Binary readout, no ToT
+	digit->SetPixelEnergyDep(stripEnergy);
+	digit->SetPrimaryVertex(m_primaryVertex->GetPosition());
 
-		m_digitsCollection->insert(digit);
+	m_digitsCollection->insert(digit);
 
 		if (debug>=INFO) {
 			G4cout << " [ITkStripsDigitizer::Digitize] Total energy in strip " << digit->GetPixelIDX()

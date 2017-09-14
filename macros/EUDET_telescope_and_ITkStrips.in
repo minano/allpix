@@ -165,7 +165,7 @@
 
 # Write ROOT File
 /allpix/WriteROOTFiles/write 0
-/allpix/WriteROOTFiles/setFolderPath `pwd`/root
+/allpix/WriteROOTFiles/setFolderPath $HOME/ITk/Allpix/allpix/root
 
 ####################################################################
 # Write Telescope files
@@ -197,8 +197,8 @@
 
 ####################################################################
 # Shoot
-/allpix/beam/frames 1000
-#/allpix/beam/frames 100000
+#/allpix/beam/frames 1
+/allpix/beam/frames 100000
 # Hits distribution Type: const, gauss, poisson, expo. 
 # Number of particles per event -> 1 D.T. 11/2016
 #/allpix/beam/type const 100

@@ -207,7 +207,7 @@ private:
   int m_nRows; //! Number of strip rows (mini 1, LS 2, SS 4)
   int m_pitchY; //! Vertical pitch between rows (2.5 mm?)
 
-  double m_precision; //! Number of bunches for charge transportation
+  double m_precision; //! Number of bunches for charge transportation. 10 is acceptable, 50 is good
 
   bool m_doFast; //! 1 : Ballistic, 2 : numerically solve eq. of motion
 

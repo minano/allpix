@@ -586,13 +586,11 @@ for( ; iCount != stripContent.end() ; iCount++)
 		}
 	}
 
-	if (crossed) // over threshold
-	{
 	// Create one digit per pixel
 	AllPixITkStripsDigit * digit = new AllPixITkStripsDigit;
 	digit->SetPixelIDX((*iCount).first.first);
 	digit->SetPixelIDY((*iCount).first.second);
-	digit->SetPixelCounts(1); // Binary readout, no ToT
+	digit->SetPixelCounts(crossed ? 1 : 0); // Binary readout, no ToT
 	digit->SetPixelEnergyDep(stripEnergy);
 	digit->SetPrimaryVertex(m_primaryVertex->GetPosition());
 
@@ -603,8 +601,6 @@ for( ; iCount != stripContent.end() ; iCount++)
 									<< " = " << digit->GetPixelEnergyDep()/keV << " keV, counts = " <<digit->GetPixelCounts() << endl;
 			//G4cout << " [ITkStripsDigitizer::Digitize] Collection size " << collectionSize << G4endl;
 		}
-	}
-	else if (debug>=INFO) G4cout << " [ITkStripsDigitizer] No digits in strip " << (*iCount).first.first << G4endl;
 }
 
 G4int dc_entries = m_digitsCollection->entries();

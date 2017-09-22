@@ -732,8 +732,8 @@ void AllPixRun::RecordDigits(const G4Event* evt){
 
     // lcio bridge
     // FIXME !
-    if(detId >= 300) *m_lciobridge_f << detId << " ";
-    if(detId < 300) *m_lciobridge_dut_f << detId << " ";
+    if(detId >= 300 and detId<350) *m_lciobridge_f << detId << " ";
+    else *m_lciobridge_dut_f << detId << " ";
 
     for (G4int itr  = 0 ; itr < nDigits ; itr++) {
 
@@ -754,7 +754,7 @@ void AllPixRun::RecordDigits(const G4Event* evt){
 
       // lcio bridge
       // FIXME !
-      if (detId >= 300) {
+      if (detId >= 300 and detId<350) {
 	*m_lciobridge_f << (*digitsCollection)[itr]->GetPixelIDX() << " "
 			<< (*digitsCollection)[itr]->GetPixelIDY() << " "
 			<< (*digitsCollection)[itr]->GetPixelCounts() << " ";
@@ -769,8 +769,8 @@ void AllPixRun::RecordDigits(const G4Event* evt){
 
     // lcio bridge
     // FIXME !
-    if(detId >= 300) *m_lciobridge_f << endl;
-    if(detId < 300) *m_lciobridge_dut_f << endl;
+    if(detId >= 300 and detId<350) *m_lciobridge_f << endl;
+    else *m_lciobridge_dut_f << endl;
   }
 }
 

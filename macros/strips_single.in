@@ -134,12 +134,12 @@
 
 ####################################################################
 # Visualization
-#/vis/scene/create
+/vis/scene/create
 #/vis/scene/add/axes 0. 0. 0. 10. cm
-#/vis/scene/add/volume World -1 2
-#/vis/viewer/set/style s
+/vis/scene/add/volume World -1 2
+/vis/viewer/set/style s
 #/vis/open OIX 1024x768-100+100
-#/vis/open OGLIXm 1024x768-100+100
+/vis/open OGLIXm 1024x768-100+100
 #/vis/open RayTracer
 #/vis/open OGLIQt
 #/vis/open OGLSQt
@@ -149,19 +149,19 @@
 #/vis/open DAWNFILE
 #/vis/open OGLSX
 #/vis/open OGL 600x600-0+0
-#/vis/viewer/set/background 0.4 0.5 0.6
-#/vis/viewer/set/viewpointThetaPhi 30 -135
-#/vis/viewer/zoom 2.0
-#/vis/viewer/flush
+/vis/viewer/set/background 0.4 0.5 0.6
+/vis/viewer/set/viewpointThetaPhi 30 -135
+/vis/viewer/zoom 2.0
+/vis/viewer/flush
 
 ####################################################################
 # Draw trajectories at end of event, showing trajectory points as
 # markers of size 2 pixels
-#/vis/scene/add/trajectories
-#/vis/modeling/trajectories/create/drawByCharge
-#/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts false
-#/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
-#/vis/scene/endOfEventAction accumulate
+/vis/scene/add/trajectories
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts false
+/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+/vis/scene/endOfEventAction accumulate
 
 # Write ROOT File
 /allpix/WriteROOTFiles/write 0
@@ -177,11 +177,8 @@
 
 ####################################################################
 # Source GPS
-/gps/particle e-
-/gps/pos/type Plane
-/gps/pos/shape Square
-/gps/pos/halfx 5.0 mm
-/gps/pos/halfy 5.0 mm
+/gps/particle pi-
+/gps/pos/type Point
 /gps/pos/centre 0 0 -1000.0 mm
 /gps/direction  0 0 1
 
@@ -189,15 +186,15 @@
 /gps/hist/type energy
 # spectra
 # momentum [MeV]
-/gps/hist/point 4800 1
+/gps/hist/point 100000 1
 
 /gps/source/list
 
 
 ####################################################################
 # Shoot
-/allpix/beam/frames 2000
-#/allpix/beam/frames 100000 
-# Number of particles per event -> 1 D.T. 11/2016
+/allpix/beam/frames 1
+
+# Number of particles/event
 /allpix/beam/type const 1
 /allpix/beam/on

@@ -4,7 +4,11 @@
                                                                                       
 John Idarraga <idarraga@cern.ch>        
 Mathieu Benoit <mbenoit@cern.ch>  
-Samir Arfaoui  <sarfaoui@cern.ch>     
+Samir Arfaoui  <sarfaoui@cern.ch> 
+
+## ITk Strips detector
+Please follow the installation instructinos below. More details also available here (only for CERN registered users):
+https://twiki.cern.ch/twiki/bin/viewauth/Atlas/StripsUpgradeTestBeamSimulation    
 
 ### Dependencies:
 

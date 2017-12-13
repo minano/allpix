@@ -74,15 +74,17 @@ public:
    */
   ElectricField getEField(double x, double y, double z);
 
-  /** Compute mobility from the formula
+  /** Compute mobility from the formula. Called by getDriftVelocity
+   *  Used for fast (ballistic) calculation.
    *
    * @param x carrier position in local c. s.
    * @param y
    * @param z
+   * @param E electric field
    * @param carrier Electron or Hole
    * @return mobility
    */
-  G4double getMobility(double x, double y, double z, CarrierType carrier);
+  G4double getMobility(double x, double y, double z, ElectricField _E, CarrierType carrier);
 
   /** Compute uniform electric field in Z direction
    *
@@ -102,7 +104,7 @@ public:
 
   array<double,4>  getDriftVector(G4double x, G4double y, G4double z);
 
-  /**
+  /** Called by getDriftVector for fast (ballistic calculation)
    *
    * @param electricField
    * @param Mobility
@@ -154,7 +156,7 @@ public:
 
   /**
    *
-   * @return
+   * @return discriminator threshold in units of charge
    */
   inline double getThresholdCharge() { return m_inputParameter.thl/kPairEnergy * CLHEP::e_SI * coulomb; }
 
@@ -167,6 +169,13 @@ public:
   G4double MyErf(G4double x);
   G4double IntegrateGaussian(G4double xhit,G4double yhit,G4double Sigma, G4double x1, G4double x2, G4double y1, G4double y2, G4double Energy );
 
+  /** Numerical integration of equations of motion
+   *
+   * @param x : x position of charge
+   * @param y : y
+   * @param z : z
+   * @param dt : time step for integration (variable)
+   */
   array<double,4> RKF5IntegrationElectrons(G4double x, G4double y, G4double z,G4double dt);
 
 

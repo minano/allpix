@@ -21,7 +21,11 @@
 #include <vector>
 #include <array>
 
+#include "TVector3.h"
+
 using namespace std;
+
+typedef TVector3 ElectricField;
 
 /**
  *  Digitizer AllPixITkStrips implementation
@@ -59,26 +63,24 @@ public:
 
   // Enums
   enum CarrierType {Electron=1, Hole=0};
-  typedef double ElectricField;
 
   //! Methods
 
   /** Calculate electric field in 1-dim
    *
-   * @param x : x position in ??? co-ord system - where is the centre?
+   * @param x : x position in local c.s.
    * @param y : y -II-
    * @param z : position where e-h pair is created
    */
-  ElectricField getEField1D(double x, double y, double z);
+  ElectricField getEField(double x, double y, double z);
 
-  double getENorm(double Ez);
-
-  /**
+  /** Compute mobility from the formula
    *
-   * @param electricField
-   * @param Temperature
-   * @param isHoleBit
-   * @return
+   * @param x carrier position in local c. s.
+   * @param y
+   * @param z
+   * @param carrier Electron or Hole
+   * @return mobility
    */
   G4double getMobility(double x, double y, double z, CarrierType carrier);
 

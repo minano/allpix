@@ -38,7 +38,8 @@ const double AllPixITkStripsDigitizer::kMaxError = 1e-4 ;
 
 extern DebugLevel debug;
 
-AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hitsColName, G4String digitColName) 
+
+AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hitsColName, G4String digitColName)
 : AllPixDigitizerInterface (modName) ,
   m_primaryVertex(0),
   m_doFast(false),
@@ -139,8 +140,8 @@ G4double AllPixITkStripsDigitizer::getMobility(double x, double y, double z, Car
 		exit(-1);
 	}
 
-	ElectricField _E = getEField1D(x, y, z);
-	G4double mobility = (saturationV/criticalE) / pow(1+pow((_E/criticalE), beta), (1/beta));
+	ElectricField _E = getEField(x, y, z);
+	G4double mobility = (saturationV/criticalE) / pow(1+pow((_E.Mag()/criticalE), beta), (1/beta));
 	/*if (debug>INFO) {
 		if (carrier == Electron)
 			G4cout << " [AllPixITkStripDigitizer] mu_e [cm2/Vs] = " <<
@@ -157,9 +158,9 @@ G4double AllPixITkStripsDigitizer::getMobility(double x, double y, double z, Car
 
 G4double AllPixITkStripsDigitizer::GetDriftVelocity(double x, double y, double z, CarrierType carrier){
 
-	ElectricField electricField = getEField1D(x, y, z);
+	ElectricField electricField = getEField(x, y, z);
 	double Mobility = getMobility(x, y, z, carrier);
-	G4double driftVelocity = Mobility*electricField;
+	G4double driftVelocity = Mobility*electricField.Mag();
 	if(carrier == Hole) driftVelocity = -1*driftVelocity; // Drifts in opposite direction
 	//if (debug > ERROR) G4cout << " [AllPixITkStripDigitizer] v = " << driftVelocity/cm*s << " cm/s " << G4endl;
 	return driftVelocity;
@@ -174,7 +175,7 @@ G4double AllPixITkStripsDigitizer::GetMeanFreePath(G4double driftVelocity, G4boo
 }
 
 
-double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
+ElectricField AllPixITkStripsDigitizer::getEField(double x, double y, double z){
 
 	if (z<-kMaxError or z>(m_detectorWidth+kMaxError) ) {
 
@@ -183,14 +184,14 @@ double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 			G4cout << " [ITkStripDigitizer::getEField1D] Carrier out of sensitive strip: " << z/um << G4endl;
 		}
 
-		return 0.0;
+		return ElectricField(0, 0, 0);
 
 	}
 
 	//if(readoutType==ELECTRON)
 	//{
-	//double electricFieldX = 0.0;
-	//double electricFieldY = 0.0;
+	double electricFieldX = 0.0;
+	double electricFieldY = 0.0;
 	double electricFieldZ=(m_biasVoltage+m_depletionVoltage)/m_detectorWidth+
 			2*m_depletionVoltage/pow(m_detectorWidth,2)*z;
 
@@ -201,17 +202,7 @@ double AllPixITkStripsDigitizer::getEField1D(double x, double y, double z){
 
 	//double electricField = std::sqrt(electricFieldX*electricFieldX + electricFieldY*electricFieldY + electricFieldZ*electricFieldZ);
 	//if (debug==DEBUG) G4cout << TString::Format(" [ITkStripDigitizer::EField1D] E = %g V/cm", electricFieldZ*cm)<< G4endl;
-	return electricFieldZ;
-}
-
-/*G4double AllPixTimepix3Digitizer::GetElectricFieldNorm(G4double , G4double , G4double ){
-
-	return TMath::Sqrt(electricFieldX*electricFieldX +electricFieldY*electricFieldY +electricFieldZ*electricFieldZ );
-}*/
-
-double AllPixITkStripsDigitizer::getENorm(double z){
-	double Ez = getEField1D(0,0,z);
-	return TMath::Sqrt(Ez*Ez);
+	return ElectricField(electricFieldX, electricFieldY, electricFieldZ);
 }
 
 G4double AllPixITkStripsDigitizer::getDriftTime(G4double z, CarrierType carrier, bool doFast)
@@ -219,9 +210,9 @@ G4double AllPixITkStripsDigitizer::getDriftTime(G4double z, CarrierType carrier,
 	// drift in a uniform electric field from hit position to surface
 	double drift = 0;
 	if (doFast){
-		ElectricField _E = getEField1D(0,0,z);
+		ElectricField _E = getEField(0,0,z);
 
-		if (_E != 0) {
+		if (_E.Mag() != 0) {
 			if (debug==DEBUG) G4cout << " [ComputeDriftTime] Fast ballistic calculation of drift time." << endl;
 			// tz is transformation vector to c.s. I quadrant
 			//double tz = z + m_detectorWidth/2.;
@@ -624,53 +615,50 @@ array<double,4>  AllPixITkStripsDigitizer::RKF5IntegrationElectrons(G4double x, 
 	double k1z,k2z,k3z,k4z,k5z,k6z;
 	double dx,dy,dz;
 
-	ElectricField electricFieldZ = getEField1D(x,y,z);
+	ElectricField electricField = getEField(x,y,z);
 
-	double electricFieldX = 0;
-	double electricFieldY = 0;
-
-	k1x=-getMobility(x, y, z, Electron)*electricFieldX*dt;
-	k1y=-getMobility(x, y, z, Electron)*electricFieldY*dt;
-	k1z=-getMobility(x, y, z, Electron)*electricFieldZ*dt;
+	k1x=-getMobility(x, y, z, Electron)*electricField.X()*dt;
+	k1y=-getMobility(x, y, z, Electron)*electricField.Y()*dt;
+	k1z=-getMobility(x, y, z, Electron)*electricField.Z()*dt;
 	if (debug == DEBUG) cout << " [AllPixITkStripDigitizer::RKF5IntegrationElectrons] k1x : "<<k1x<<", k1y : " << k1y << ", k1z : " << k1z << endl;
 
-	electricFieldZ = getEField1D(x+k1x/4,y+k1y/4,z+k1z/4);
+	electricField = getEField(x+k1x/4,y+k1y/4,z+k1z/4);
 
-	k2x=-getMobility(x+k1x/4,y+k1y/4,z+k1z/4, Electron)*electricFieldX*dt;
-	k2y=-getMobility(x+k1x/4,y+k1y/4,z+k1z/4, Electron)*electricFieldY*dt;
-	k2z=-getMobility(x+k1x/4,y+k1y/4,z+k1z/4, Electron)*electricFieldZ*dt;
+	k2x=-getMobility(x+k1x/4,y+k1y/4,z+k1z/4, Electron)*electricField.X()*dt;
+	k2y=-getMobility(x+k1x/4,y+k1y/4,z+k1z/4, Electron)*electricField.Y()*dt;
+	k2z=-getMobility(x+k1x/4,y+k1y/4,z+k1z/4, Electron)*electricField.Z()*dt;
 
-	electricFieldZ = getEField1D(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z);
+	electricField = getEField(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z);
 
-	k3x=-getMobility(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z, Electron)*electricFieldX*dt;
-	k3y=-getMobility(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z, Electron)*electricFieldY*dt;
-	k3z=-getMobility(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z, Electron)*electricFieldZ*dt;
+	k3x=-getMobility(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z, Electron)*electricField.X()*dt;
+	k3y=-getMobility(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z, Electron)*electricField.Y()*dt;
+	k3z=-getMobility(x+(9./32)*k2x+(3./32)*k1x,y+(9./32)*k2y+(3./32)*k1y,z+(9./32)*k2z+(3./32)*k1z, Electron)*electricField.Z()*dt;
 
-	electricFieldZ = getEField1D(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z);
+	electricField = getEField(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z);
 
-	k4x=-getMobility(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z, Electron)*electricFieldX*dt;
-	k4y=-getMobility(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z, Electron)*electricFieldY*dt;
-	k4z=-getMobility(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z, Electron)*electricFieldZ*dt;
+	k4x=-getMobility(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z, Electron)*electricField.X()*dt;
+	k4y=-getMobility(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z, Electron)*electricField.Y()*dt;
+	k4z=-getMobility(x-(7200./2197)*k2x+(1932./2197)*k1x+(7296./2197)*k3x,y-(7200./2197)*k2y+(1932./2197)*k1y+(7296./2197)*k3y,z-(7200./2197)*k2z+(1932./2197)*k1z+(7296./2197)*k3z, Electron)*electricField.Z()*dt;
 
-	electricFieldZ = getEField1D(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z);
+	electricField = getEField(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z);
 
-	k5x=-getMobility(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z, Electron)*electricFieldX*dt;
-	k5y=-getMobility(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z, Electron)*electricFieldY*dt;
-	k5z=-getMobility(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z, Electron)*electricFieldZ*dt;
+	k5x=-getMobility(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z, Electron)*electricField.X()*dt;
+	k5y=-getMobility(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z, Electron)*electricField.Y()*dt;
+	k5z=-getMobility(x-(8)*k2x+(439./216)*k1x+(3680./513)*k3x-(845./4104)*k4x,y-(8)*k2y+(439./216)*k1y+(3680./513)*k3y-(845./4104)*k4y,z-(8)*k2z+(439./216)*k1z+(3680./513)*k3z-(845./4104)*k4z, Electron)*electricField.Z()*dt;
 
-	electricFieldZ = getEField1D(x+(2)*k2x-(8./27)*k1x-(3544./2565)*k3x-(1859./4104)*k4x-(11./40)*k5x,
+	electricField = getEField(x+(2)*k2x-(8./27)*k1x-(3544./2565)*k3x-(1859./4104)*k4x-(11./40)*k5x,
 			y+(2)*k2y-(8./27)*k1y-(3544./2565)*k3y-(1859./4104)*k4y-(11./40)*k5y,
 			z+(2)*k2z-(8./27)*k1z-(3544./2565)*k3z-(1859./4104)*k4z-(11./40)*k5z);
 
 	k6x=-getMobility(x+(2)*k2x-(8./27)*k1x-(3544./2565)*k3x-(1859./4104)*k4x-(11./40)*k5x,
 			y+(2)*k2y-(8./27)*k1y-(3544./2565)*k3y-(1859./4104)*k4y-(11./40)*k5y,
-			z+(2)*k2z-(8./27)*k1z-(3544./2565)*k3z-(1859./4104)*k4z-(11./40)*k5z, Electron)*electricFieldX*dt;
+			z+(2)*k2z-(8./27)*k1z-(3544./2565)*k3z-(1859./4104)*k4z-(11./40)*k5z, Electron)*electricField.X()*dt;
 	k6y=-getMobility(x+(2)*k2x-(8./27)*k1x-(3544./2565)*k3x-(1859./4104)*k4x-(11./40)*k5x,
 			y+(2)*k2y-(8./27)*k1y-(3544./2565)*k3y-(1859./4104)*k4y-(11./40)*k5y,
-			z+(2)*k2z-(8./27)*k1z-(3544./2565)*k3z-(1859./4104)*k4z-(11./40)*k5z, Electron)*electricFieldY*dt;
+			z+(2)*k2z-(8./27)*k1z-(3544./2565)*k3z-(1859./4104)*k4z-(11./40)*k5z, Electron)*electricField.Y()*dt;
 	k6z=-getMobility(x+(2)*k2x-(8./27)*k1x-(3544./2565)*k3x-(1859./4104)*k4x-(11./40)*k5x,
 			y+(2)*k2y-(8./27)*k1y-(3544./2565)*k3y-(1859./4104)*k4y-(11./40)*k5y,
-			z+(2)*k2z-(8./27)*k1z-(3544./2565)*k3z-(1859./4104)*k4z-(11./40)*k5z, Electron)*electricFieldZ*dt;
+			z+(2)*k2z-(8./27)*k1z-(3544./2565)*k3z-(1859./4104)*k4z-(11./40)*k5z, Electron)*electricField.Z()*dt;
 
 	dx=((16./135)*k1x+(6656./12825)*k3x+(28561./56430)*k4x-(9./50)*k5x+(2./55)*k6x);
 	dy=((16./135)*k1y+(6656./12825)*k3y+(28561./56430)*k4y-(9./50)*k5y+(2./55)*k6y);

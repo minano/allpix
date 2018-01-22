@@ -205,7 +205,7 @@ private:
   double m_biasVoltage; //! Bias voltage, should be pass from xml gear file, V
   double m_Neff; //! Effective carrier concentration, 1/cm3
   double m_depletionDepth; //! theoretical depth of depleted zone from flat diode approx, mm
-
+  double m_fluence;//! From gear file
   double m_temperature; //! From gear file
 
   double m_trappingTimeElectrons; //! From gear file

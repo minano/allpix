@@ -63,6 +63,8 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 	m_biasVoltage = m_geometry->GetBiasVoltage();
 	m_Neff = 5.3e12 * 1/TMath::Power(cm, 3); // 1/cm3 FIXME
 	m_depletionDepth = TMath::Sqrt((2*SiPermittivity*m_biasVoltage)/(e_SI * TMath::Abs(m_Neff)));
+	//INCLUDED FLUENCE FROM m_GEOMETRY
+	m_fluence = m_geometry->GetFluence();
 
 	if (m_depletionDepth > m_detectorWidth)
 		m_depletionDepth = m_detectorWidth;
@@ -92,6 +94,7 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 	}
 
 	if (debug>ERROR) {
+
 		G4cout << " [AllPixITkStripDigitizer] Bias voltage " << m_biasVoltage << "V" << endl;
 		G4cout << " [AllPixITkStripDigitizer] Depletion voltage " << m_depletionVoltage << "V" << endl;
 		G4cout << " [AllPixITkStripDigitizer] threshold " << m_inputParameter.thl/eV << " eV " << TString::Format(" %d pairs\n", getThresholdPairs());
@@ -103,7 +106,10 @@ AllPixITkStripsDigitizer::AllPixITkStripsDigitizer(G4String modName, G4String hi
 		G4cout << " [AllPixITkStripDigitizer] No. of strips in Y = "<< m_nRows<< G4endl;
 		G4cout << " [AllPixITkStripDigitizer] pitchX [um] = "<< m_pitchX/um<< G4endl;
 		G4cout << " [AllPixITkStripDigitizer] pitchY [um] = "<< m_pitchY/um<< G4endl;
-	}
+		G4cout << " [AllPixITkStripDigitizer] fluence [neq/cm2] = "<<m_fluence*1/cm2<<" (neq/cm2)"<< G4endl;
+			}
+
+
 
 
 
@@ -187,9 +193,17 @@ ElectricField AllPixITkStripsDigitizer::getEField(double x, double y, double z){
 		return ElectricField(0, 0, 0);
 
 	}
-
+	
 	//if(readoutType==ELECTRON)
 	//{
+
+	////////////////////////////////////////////
+	//// Electric Field from TCAD MAP//////////
+	//////////////////////////////////////////
+	TFile* efile = new ("/afs/cern.ch/user/m/minano/work/public/allpix/tcad_map/EField-map-strips-310um-f0e15-400V.root");
+	//For all maps, 0 is at the collecting electrode and L is the far side.
+       
+
 	double electricFieldX = 0.0;
 	double electricFieldY = 0.0;
 	double electricFieldZ=(m_biasVoltage+m_depletionVoltage)/m_detectorWidth+

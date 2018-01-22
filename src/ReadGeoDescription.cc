@@ -43,7 +43,7 @@ ReadGeoDescription::ReadGeoDescription(string xmlFile){
 	m_unitsMap["fC"] = CLHEP::coulomb*1e-15;
 	m_unitsMap["V"] = 1.0;
 	m_unitsMap["C"] = 1.0;
-
+	m_unitsMap["1/cm2"] = 1.0; //neq/cm2
 	// list of expected tags
 	TDOMParser *domParser = new TDOMParser();
 	m_firstIndx = -1;
@@ -497,6 +497,10 @@ void ReadGeoDescription::ParseContext(TXMLNode *node)
 				else if(m_currentNodeName == __bias_voltage_S){
 					float val = atof(tempContent.c_str());
 					m_detsGeo[m_firstIndx]->SetBiasVoltage(val*m_unitsMap[m_currentAtt]);
+				}
+				else if(m_currentNodeName == __fluence_S){
+					float val = atof(tempContent.c_str());
+					m_detsGeo[m_firstIndx]->SetFluence(val*m_unitsMap[m_currentAtt]);
 				}
 
 				else if (m_currentNodeName == __depletion_voltage_S){

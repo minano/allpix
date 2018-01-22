@@ -74,6 +74,7 @@
 
 // Strips specific
 #define __bias_voltage_S "bias_voltage"
+#define __fluence_S "fluence"
 #define __depletion_voltage_S "depletion_voltage"
 #define __threshold_S "threshold"
 #define __sensor_temperature_S "sensor_temperature"

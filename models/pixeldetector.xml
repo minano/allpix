@@ -59,6 +59,7 @@
 		<bias_voltage units="V">400</bias_voltage>
 		<threshold units="fC">1.0</threshold>
 		<sensor_temperature units="C">25</sensor_temperature>
+		<fluence units="1/cm2">0.0</fluence>
 		
 	</pixeldet> 
 

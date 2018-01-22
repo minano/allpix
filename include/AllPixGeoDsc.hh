@@ -156,8 +156,10 @@ public:
 
 	// Strips specific
 	G4double GetDepletionVoltage() { return m_depletionVoltage;}
+        G4double GetFluence(){return m_fluence;}
 	G4double GetBiasVoltage() { return m_biasVoltage;}
 	G4double GetSensorTemperature() {return m_sensorTemperature;}
+     
 
     ///////////////////////////////////////
     // Set
@@ -372,6 +374,9 @@ public:
 	void SetBiasVoltage(G4double val){
 		m_biasVoltage = val;
 	}
+        void SetFluence(G4double val){
+		m_fluence = val;
+	}
 
 	void SetSensorTemperature(G4double val){
 		m_sensorTemperature = val;
@@ -466,6 +471,7 @@ private:
 
 	// Strips
 	G4double m_depletionVoltage;
+        G4double m_fluence;
 	G4double m_biasVoltage;
 	G4double m_sensorTemperature;
 

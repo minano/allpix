@@ -151,6 +151,7 @@ public:
     G4ThreeVector GetMagField(){return m_MagField;};
 
     G4ThreeVector GetEFieldFromMap(G4ThreeVector);
+    G4ThreeVector GetEFieldFromTCADMap(G4ThreeVector);
 
     G4bool GetEFieldBoolean(){return m_efieldfromfile;};
 

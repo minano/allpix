@@ -29,7 +29,8 @@ source /afs/cern.ch/eng/clic/TBData/software/ROOT6_gcc48_python2.7/geant4/root-6
 export G4WORKDIR=/home/etahirov/ITk/Allpix/allpix-install/bin
 export PATH=$PATH:$G4WORKDIR
 
-source /home/etahirov/opt/share/Geant4-10.2.2/geant4make/geant4make.sh
+#source /home/etahirov/opt/share/Geant4-10.2.2/geant4make/geant4make.sh
+source /home/etahirov/opt/share/Geant4-10.3.1/geant4make/geant4make.sh
 
 # Work with EUTELESCOPE
 export EUTELESCOPE=1

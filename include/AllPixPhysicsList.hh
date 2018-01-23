@@ -64,7 +64,7 @@ public:
   void SetCutForElectron(G4double);
   void SetCutForPositron(G4double);
   void SetCutForProton(G4double);
-        
+
   void AddAllPixPhysicsList(const G4String& name);
   void ConstructProcess();
   void AddStepMax();
